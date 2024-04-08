@@ -250,4 +250,7 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+# MacOS
+.DS_Store
+
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,maven,eclipse,intellij
