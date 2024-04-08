@@ -48,8 +48,8 @@ public class SuperFrogStudentControllerTest {
         s1.setFirstName("tom");
         s1.setLastName("lee");
         s1.setActive(true);
-        s1.setPhone("12345678901");
-        s1.setProfileInfo("Student tom lee");
+        s1.setPhone("123-456-7901");
+        s1.setAddress("2901 Stadium Dr");
         s1.setEmail("tomlee@tcu.edu");
         this.superFrogStudents.add(s1);
 
@@ -58,9 +58,9 @@ public class SuperFrogStudentControllerTest {
         s2.setFirstName("andre");
         s2.setLastName("gomez");
         s2.setActive(false);
-        s2.setPhone("26345678901");
-        s2.setProfileInfo("Student andre gomez");
-        s2.setEmail("andregomez@tcu.edu");
+        s2.setPhone("263-456-7891");
+        s2.setAddress("3000 McCart Ave");
+        s1.setEmail("andregomez@tcu.edu");
         this.superFrogStudents.add(s2);
     }
 
@@ -79,7 +79,7 @@ public class SuperFrogStudentControllerTest {
         given(superFrogStudentService.update(eq(1), any(SuperFrogStudent.class))).willReturn(existingStudent);
 
         // When & Then
-        mockMvc.perform(put("/api/v1/superfrogstudents/{superFrogStudentId}/deactivate", 1)
+        mockMvc.perform(put("/api/v1/superfrog-students/{superFrogStudentId}/deactivate", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))

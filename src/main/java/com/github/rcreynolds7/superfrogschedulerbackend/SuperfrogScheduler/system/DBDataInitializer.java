@@ -21,7 +21,7 @@ public class DBDataInitializer implements CommandLineRunner {
         s1.setLastName("lee");
         s1.setActive(true);
         s1.setPhone("12345678901");
-        s1.setProfileInfo("Student tom lee");
+        s1.setAddress("2901 Stadium Dr");
         s1.setEmail("tomlee@tcu.edu");
 
         superFrogStudentRepository.save(s1);

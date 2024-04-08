@@ -38,17 +38,17 @@ public class SuperFrogStudentServiceTest {
         s1.setFirstName("tom");
         s1.setLastName("lee");
         s1.setActive(true);
-        s1.setPhone("12345678901");
-        s1.setProfileInfo("Student tom lee");
+        s1.setPhone("123-456-7901");
+        s1.setAddress("2901 Stadium Dr");
         s1.setEmail("tomlee@tcu.edu");
 
         SuperFrogStudent s2 = new SuperFrogStudent();
-        s1.setId(2);
-        s1.setFirstName("andre");
-        s1.setLastName("gomez");
-        s1.setActive(false);
-        s1.setPhone("26345678901");
-        s1.setProfileInfo("Student andre gomez");
+        s2.setId(2);
+        s2.setFirstName("andre");
+        s2.setLastName("gomez");
+        s2.setActive(false);
+        s2.setPhone("263-456-7891");
+        s2.setAddress("3000 McCart Ave");
         s1.setEmail("andregomez@tcu.edu");
 
         this.superFrogStudents = new ArrayList<>();

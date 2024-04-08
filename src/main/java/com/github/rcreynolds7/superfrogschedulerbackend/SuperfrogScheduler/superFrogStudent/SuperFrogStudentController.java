@@ -5,7 +5,7 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.syste
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/superfrogstudents")
+@RequestMapping("/api/v1/superfrog-students")
 public class SuperFrogStudentController {
     private final SuperFrogStudentService superFrogStudentService;
 

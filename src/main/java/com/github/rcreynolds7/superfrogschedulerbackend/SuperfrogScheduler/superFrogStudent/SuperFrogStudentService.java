@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +22,10 @@ public class SuperFrogStudentService {
                 orElseThrow(() -> new SuperFrogStudentNotFoundException(superFrogStudentId));
     }
 
+    public List<SuperFrogStudent> findAll() {
+        return this.superFrogStudentRepository.findAll();
+    }
+
     public SuperFrogStudent update(Integer superFrogStudentId, SuperFrogStudent update) {
         return this.superFrogStudentRepository.findById(superFrogStudentId)
                 .map(oldSuperFrogStudent -> {
@@ -28,7 +33,7 @@ public class SuperFrogStudentService {
                     oldSuperFrogStudent.setLastName(update.getLastName());
                     oldSuperFrogStudent.setEmail(update.getEmail());
                     oldSuperFrogStudent.setPhone(update.getPhone());
-                    oldSuperFrogStudent.setProfileInfo(update.getProfileInfo());
+                    oldSuperFrogStudent.setAddress(update.getAddress());
                     oldSuperFrogStudent.setActive(update.getActive());
 
                     return this.superFrogStudentRepository.save(oldSuperFrogStudent);

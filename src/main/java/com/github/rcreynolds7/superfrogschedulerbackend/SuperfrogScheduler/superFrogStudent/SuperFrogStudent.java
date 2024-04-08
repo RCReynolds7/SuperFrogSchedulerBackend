@@ -11,7 +11,7 @@ public class SuperFrogStudent {
     private String lastName;
     private String email;
     private String phone;
-    private String profileInfo;
+    private String address;
     private Boolean isActive;
 
     // Constructor
@@ -19,6 +19,7 @@ public class SuperFrogStudent {
     }
 
     // Getter & Setter
+
 
     public Integer getId() {
         return id;
@@ -60,12 +61,12 @@ public class SuperFrogStudent {
         this.phone = phone;
     }
 
-    public String getProfileInfo() {
-        return profileInfo;
+    public String getAddress() {
+        return address;
     }
 
-    public void setProfileInfo(String profileInfo) {
-        this.profileInfo = profileInfo;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Boolean getActive() {
