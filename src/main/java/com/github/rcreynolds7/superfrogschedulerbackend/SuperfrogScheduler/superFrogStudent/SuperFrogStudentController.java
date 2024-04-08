@@ -3,6 +3,7 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.supe
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,12 @@ public class SuperFrogStudentController {
         @RequestParam(required = false) String lastName,
         @RequestParam(required = false) String email,
         @RequestParam(required = false) String phone) {
+        // Check if all search parameters are empty
+        if (!StringUtils.hasText(firstName) && !StringUtils.hasText(lastName)
+                && !StringUtils.hasText(email) && !StringUtils.hasText(phone)) {
+            return new Result(false, StatusCode.INVALID_ARGUMENT, "At least one search parameter must be provided");
+        }
+
         List<SuperFrogStudent> students = superFrogStudentService.searchStudents(firstName, lastName, email, phone);
         List<SuperFrogStudentDto> resultDtos = students.stream()
                 .map(student -> new SuperFrogStudentDto(

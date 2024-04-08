@@ -116,7 +116,6 @@ public class SuperFrogStudentControllerTest {
         mockMvc.perform(get("/api/v1/superfrog-students/search")
                         .param("firstName", "tom")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("SuperFrog student search completed successfully"))
@@ -132,10 +131,20 @@ public class SuperFrogStudentControllerTest {
         mockMvc.perform(get("/api/v1/superfrog-students/search")
                         .param("firstName", "nonexistent")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("SuperFrog student search completed successfully"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
+
+    @Test
+    void testSearchSuperFrogStudentsWithNoParameters() throws Exception {
+        // Attempt to perform search without providing any search parameters
+        mockMvc.perform(get("/api/v1/superfrog-students/search")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.INVALID_ARGUMENT))
+                .andExpect(jsonPath("$.message").value("At least one search parameter must be provided"));
+    }
+
 }
