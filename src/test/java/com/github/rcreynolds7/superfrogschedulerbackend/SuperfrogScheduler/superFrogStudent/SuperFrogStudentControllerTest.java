@@ -21,6 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -104,5 +105,37 @@ public class SuperFrogStudentControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("SuperFrog Student deactivated successfully"));
+    }
+
+    @Test
+    void testSearchSuperFrogStudentsSuccess() throws Exception {
+        // Given
+        given(superFrogStudentService.searchStudents("tom", null, null, null)).willReturn(superFrogStudents.subList(0, 1));
+
+        // When & Then
+        mockMvc.perform(get("/api/v1/superfrog-students/search")
+                        .param("firstName", "tom")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("SuperFrog student search completed successfully"))
+                .andExpect(jsonPath("$.data[0].firstName").value("tom"));
+    }
+
+    @Test
+    void testSearchSuperFrogStudentsNoResults() throws Exception {
+        // Given
+        given(superFrogStudentService.searchStudents("nonexistent", null, null, null)).willReturn(new ArrayList<>());
+
+        // When & Then
+        mockMvc.perform(get("/api/v1/superfrog-students/search")
+                        .param("firstName", "nonexistent")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("SuperFrog student search completed successfully"))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 }

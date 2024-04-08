@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,5 +141,30 @@ public class SuperFrogStudentServiceTest {
         // When & Then
         assertThrows(SuperFrogStudentNotFoundException.class, () -> superFrogStudentService.update(99, updatedInfo));
         verify(superFrogStudentRepository, times(1)).findById(99);
+    }
+
+    @Test
+    void testSearchStudentsSuccess() {
+        // Given
+        given(superFrogStudentRepository.findAll(any(Specification.class))).willReturn(superFrogStudents.subList(0, 1));
+
+        // When
+        List<SuperFrogStudent> foundStudents = superFrogStudentService.searchStudents("tom", null, null, null);
+
+        // Then
+        assertThat(foundStudents).hasSize(1);
+        assertThat(foundStudents.get(0).getFirstName()).isEqualTo("tom");
+    }
+
+    @Test
+    void testSearchStudentsNoResults() {
+        // Given
+        given(superFrogStudentRepository.findAll(any(Specification.class))).willReturn(new ArrayList<>());
+
+        // When
+        List<SuperFrogStudent> foundStudents = superFrogStudentService.searchStudents("nonexistent", null, null, null);
+
+        // Then
+        assertThat(foundStudents).isEmpty();
     }
 }
