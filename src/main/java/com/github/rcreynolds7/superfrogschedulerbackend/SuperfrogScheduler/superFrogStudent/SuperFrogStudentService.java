@@ -2,7 +2,9 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.supe
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,5 +41,22 @@ public class SuperFrogStudentService {
                     return this.superFrogStudentRepository.save(oldSuperFrogStudent);
                 })
                 .orElseThrow(() -> new SuperFrogStudentNotFoundException(superFrogStudentId));
+    }
+
+    public List<SuperFrogStudent> searchStudents(String firstName, String lastName, String email, String phone) {
+        Specification<SuperFrogStudent> spec = Specification.where(null);
+        if (StringUtils.hasText(firstName)) {
+            spec = spec.and(SuperFrogStudentSpecifications.withFirstName(firstName));
+        }
+        if (StringUtils.hasText(lastName)) {
+            spec = spec.and(SuperFrogStudentSpecifications.withLastName(lastName));
+        }
+        if (StringUtils.hasText(email)) {
+            spec = spec.and(SuperFrogStudentSpecifications.withEmail(email));
+        }
+        if (StringUtils.hasText(phone)) {
+            spec = spec.and(SuperFrogStudentSpecifications.withPhone(phone));
+        }
+        return superFrogStudentRepository.findAll(spec);
     }
 }

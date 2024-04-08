@@ -1,8 +1,12 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/superfrog-students")
@@ -22,5 +26,26 @@ public class SuperFrogStudentController {
             superFrogStudentService.update(superFrogStudentId, superFrogStudent);
 
             return new Result(true, StatusCode.SUCCESS, "SuperFrog Student deactivated successfully");
+    }
+
+    @GetMapping("/search")
+    public Result searchSuperFrogStudents(
+        @RequestParam(required = false) String firstName,
+        @RequestParam(required = false) String lastName,
+        @RequestParam(required = false) String email,
+        @RequestParam(required = false) String phone) {
+        List<SuperFrogStudent> students = superFrogStudentService.searchStudents(firstName, lastName, email, phone);
+        List<SuperFrogStudentDto> resultDtos = students.stream()
+                .map(student -> new SuperFrogStudentDto(
+                        student.getId().toString(),
+                        student.getFirstName(),
+                        student.getLastName(),
+                        student.getEmail(),
+                        student.getPhone(),
+                        student.getAddress(),
+                        student.getActive()))
+                .collect(Collectors.toList());
+
+        return new Result(true, StatusCode.SUCCESS, "SuperFrog student search completed successfully", resultDtos);
     }
 }
