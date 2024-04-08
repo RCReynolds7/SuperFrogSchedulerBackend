@@ -60,7 +60,7 @@ public class SuperFrogStudentControllerTest {
         s2.setActive(false);
         s2.setPhone("263-456-7891");
         s2.setAddress("3000 McCart Ave");
-        s1.setEmail("andregomez@tcu.edu");
+        s2.setEmail("andregomez@tcu.edu");
         this.superFrogStudents.add(s2);
     }
 
