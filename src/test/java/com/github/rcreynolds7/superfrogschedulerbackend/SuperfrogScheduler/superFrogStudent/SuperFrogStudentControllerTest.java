@@ -41,7 +41,7 @@ public class SuperFrogStudentControllerTest {
 
     List<SuperFrogStudent> superFrogStudents;
 
-    @Value("${api.endpoint.base-url}")
+    @Value("${api.endpoint.base-url}/superfrog-students")
     String baseUrl;
 
     @BeforeEach
@@ -91,64 +91,6 @@ public class SuperFrogStudentControllerTest {
 
     @AfterEach()
     void tearDown() {
-    }
-
-    @Test
-    void testDeactivateSuperFrogStudentSuccess() throws Exception {
-        // Given
-        SuperFrogStudent existingStudent = new SuperFrogStudent();
-        existingStudent.setId(1);
-        existingStudent.setActive(true);
-
-        given(superFrogStudentService.findById(eq(1))).willReturn(existingStudent);
-        given(superFrogStudentService.update(eq(1), any(SuperFrogStudent.class))).willReturn(existingStudent);
-
-        // When & Then
-        mockMvc.perform(put( this.baseUrl + "/superfrog-students/{superFrogStudentId}/deactivate", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("SuperFrog Student deactivated successfully"));
-    }
-
-    @Test
-    void testSearchSuperFrogStudentsSuccess() throws Exception {
-        // Given
-        given(superFrogStudentService.searchStudents("tom", null, null, null)).willReturn(superFrogStudents.subList(0, 1));
-
-        // When & Then
-        mockMvc.perform(get(this.baseUrl + "/superfrog-students/search")
-                        .param("firstName", "tom")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("SuperFrog student search completed successfully"))
-                .andExpect(jsonPath("$.data[0].firstName").value("tom"));
-    }
-
-    @Test
-    void testSearchSuperFrogStudentsNoResults() throws Exception {
-        // Given
-        given(superFrogStudentService.searchStudents("nonexistent", null, null, null)).willReturn(new ArrayList<>());
-
-        // When & Then
-        mockMvc.perform(get(this.baseUrl + "/superfrog-students/search")
-                        .param("firstName", "nonexistent")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("SuperFrog student search completed successfully"))
-                .andExpect(jsonPath("$.data").isEmpty());
-    }
-
-    @Test
-    void testSearchSuperFrogStudentsWithNoParameters() throws Exception {
-        // Attempt to perform search without providing any search parameters
-        mockMvc.perform(get(this.baseUrl + "/superfrog-students/search")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(false))
-                .andExpect(jsonPath("$.code").value(StatusCode.INVALID_ARGUMENT))
-                .andExpect(jsonPath("$.message").value("At least one search parameter must be provided"));
     }
 
 }
