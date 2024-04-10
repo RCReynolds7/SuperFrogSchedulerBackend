@@ -1,16 +1,25 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class SuperFrogStudent {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @NotEmpty(message = "firstname is required.")
     private String firstName;
+    @NotEmpty(message = "lastname is required.")
     private String lastName;
+    @NotEmpty(message = "email is required.")
     private String email;
+    @NotEmpty(message = "phone is required.")
     private String phone;
+    @NotEmpty(message = "address is required.")
     private String address;
     private Boolean isActive;
 

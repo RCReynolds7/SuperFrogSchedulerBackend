@@ -1,5 +1,6 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,7 +107,7 @@ public class SuperFrogStudentServiceTest {
         });
 
         // Then
-        assertThat(thrown).isInstanceOf(SuperFrogStudentNotFoundException.class);
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
         verify(superFrogStudentRepository, times(1)).findById(nonExistentId);
     }
 
@@ -139,7 +140,7 @@ public class SuperFrogStudentServiceTest {
         given(superFrogStudentRepository.findById(anyInt())).willReturn(Optional.empty());
 
         // When & Then
-        assertThrows(SuperFrogStudentNotFoundException.class, () -> superFrogStudentService.update(99, updatedInfo));
+        assertThrows(ObjectNotFoundException.class, () -> superFrogStudentService.update(99, updatedInfo));
         verify(superFrogStudentRepository, times(1)).findById(99);
     }
 
