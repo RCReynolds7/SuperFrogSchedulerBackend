@@ -2,6 +2,7 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.supe
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.PaymentPreference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
@@ -17,6 +18,7 @@ public class SuperFrogStudent {
     private String lastName;
 
     @NotEmpty(message = "email is required.")
+    @Email(message = "email must be a valid email address.")
     private String email;
 
     @NotEmpty(message = "phone is required.")
