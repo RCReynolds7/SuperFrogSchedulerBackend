@@ -4,6 +4,7 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.syste
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 public class SuperFrogStudent {
@@ -22,9 +23,11 @@ public class SuperFrogStudent {
     private String email;
 
     @NotEmpty(message = "phone is required.")
+    @Pattern(regexp = "^\\(\\d{3}\\)\\s\\d{3}-\\d{4}$", message = "phone number must be in the format (999) 999-9999")
     private String phone;
 
     @NotEmpty(message = "address is required.")
+    @Pattern(regexp = "^\\d+\\s+([a-zA-Z0-9\\s]+)\\s*,\\s*([a-zA-Z]+)\\s*,\\s*([a-zA-Z]+)\\s*\\d{5}(-\\d{4})?$", message = "address must be in the US format (street, city, state, postal code)")
     private String address;
 
     private Boolean isActive = true;
