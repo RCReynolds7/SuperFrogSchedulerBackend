@@ -38,6 +38,8 @@ public class SuperFrogStudentService {
                     oldSuperFrogStudent.setPhone(update.getPhone());
                     oldSuperFrogStudent.setAddress(update.getAddress());
                     oldSuperFrogStudent.setActive(update.getActive());
+                    oldSuperFrogStudent.setInternational(update.getInternational());
+                    oldSuperFrogStudent.setPaymentPreference(update.getPaymentPreference());
 
                     return this.superFrogStudentRepository.save(oldSuperFrogStudent);
                 })
