@@ -47,7 +47,6 @@ public class SuperFrogStudentControllerTest {
     @BeforeEach
     void setUp() {
         SuperFrogStudent s1 = new SuperFrogStudent();
-        s1.setId(1);
         s1.setFirstName("tom");
         s1.setLastName("lee");
         s1.setActive(true);
@@ -56,7 +55,6 @@ public class SuperFrogStudentControllerTest {
         s1.setEmail("tomlee@tcu.edu");
 
         SuperFrogStudent s2 = new SuperFrogStudent();
-        s2.setId(2);
         s2.setFirstName("andre");
         s2.setLastName("gomez");
         s2.setActive(false);
@@ -65,7 +63,6 @@ public class SuperFrogStudentControllerTest {
         s2.setEmail("andregomez@tcu.edu");
 
         SuperFrogStudent s3 = new SuperFrogStudent();
-        s3.setId(3);
         s3.setFirstName("jonny");
         s3.setLastName("long");
         s3.setActive(true);
@@ -74,7 +71,6 @@ public class SuperFrogStudentControllerTest {
         s3.setEmail("jonny@asu.edu");
 
         SuperFrogStudent s4 = new SuperFrogStudent();
-        s4.setId(4);
         s4.setFirstName("ana");
         s4.setLastName("park");
         s4.setActive(false);
