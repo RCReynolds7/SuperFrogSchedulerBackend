@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/superfrog-students")
+@RequestMapping("${api.endpoint.base-url}/superfrog-students")
 public class SuperFrogStudentController {
     private final SuperFrogStudentService superFrogStudentService;
 

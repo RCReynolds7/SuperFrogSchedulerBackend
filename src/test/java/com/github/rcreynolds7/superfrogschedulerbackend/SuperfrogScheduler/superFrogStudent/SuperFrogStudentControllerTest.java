@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,6 +40,9 @@ public class SuperFrogStudentControllerTest {
     ObjectMapper objectMapper;
 
     List<SuperFrogStudent> superFrogStudents;
+
+    @Value("${api.endpoint.base-url}")
+    String baseUrl;
 
     @BeforeEach
     void setUp() {
@@ -100,7 +104,7 @@ public class SuperFrogStudentControllerTest {
         given(superFrogStudentService.update(eq(1), any(SuperFrogStudent.class))).willReturn(existingStudent);
 
         // When & Then
-        mockMvc.perform(put("/api/v1/superfrog-students/{superFrogStudentId}/deactivate", 1)
+        mockMvc.perform(put( this.baseUrl + "/superfrog-students/{superFrogStudentId}/deactivate", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
@@ -113,7 +117,7 @@ public class SuperFrogStudentControllerTest {
         given(superFrogStudentService.searchStudents("tom", null, null, null)).willReturn(superFrogStudents.subList(0, 1));
 
         // When & Then
-        mockMvc.perform(get("/api/v1/superfrog-students/search")
+        mockMvc.perform(get(this.baseUrl + "/superfrog-students/search")
                         .param("firstName", "tom")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -128,7 +132,7 @@ public class SuperFrogStudentControllerTest {
         given(superFrogStudentService.searchStudents("nonexistent", null, null, null)).willReturn(new ArrayList<>());
 
         // When & Then
-        mockMvc.perform(get("/api/v1/superfrog-students/search")
+        mockMvc.perform(get(this.baseUrl + "/superfrog-students/search")
                         .param("firstName", "nonexistent")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -140,7 +144,7 @@ public class SuperFrogStudentControllerTest {
     @Test
     void testSearchSuperFrogStudentsWithNoParameters() throws Exception {
         // Attempt to perform search without providing any search parameters
-        mockMvc.perform(get("/api/v1/superfrog-students/search")
+        mockMvc.perform(get(this.baseUrl + "/superfrog-students/search")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.INVALID_ARGUMENT))
