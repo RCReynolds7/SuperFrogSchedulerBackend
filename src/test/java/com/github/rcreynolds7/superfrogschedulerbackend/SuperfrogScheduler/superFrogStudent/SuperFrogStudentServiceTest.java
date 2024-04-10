@@ -1,5 +1,6 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.PaymentPreference;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,7 +109,7 @@ public class SuperFrogStudentServiceTest {
     }
 
     @Test
-    void testUpdateSuccess() {
+    void testUpdateSuccess1() {
         // Given
         SuperFrogStudent existingStudent = superFrogStudents.get(0);
         SuperFrogStudent updatedInfo = new SuperFrogStudent();
@@ -126,6 +127,40 @@ public class SuperFrogStudentServiceTest {
         assertThat(updatedStudent.getLastName()).isEqualTo("UpdatedLastName");
         verify(superFrogStudentRepository, times(1)).findById(1);
         verify(superFrogStudentRepository, times(1)).save(existingStudent);
+    }
+
+    @Test
+    void testUpdateSuccess2() {
+        // Given
+        SuperFrogStudent existingStudent = superFrogStudents.get(2);
+        SuperFrogStudent updatedInfo = new SuperFrogStudent();
+        updatedInfo.setFirstName("UpdatedFirstName");
+        updatedInfo.setLastName("UpdatedLastName");
+        updatedInfo.setEmail("updatedEmail@tcu.edu");
+        updatedInfo.setPhone("999-999-9999");
+        updatedInfo.setAddress("999 Updated Address Dr");
+        updatedInfo.setActive(false);
+        updatedInfo.setInternational(true);
+        updatedInfo.setPaymentPreference(PaymentPreference.PICK_UP_CHECK);
+
+        given(superFrogStudentRepository.findById(2)).willReturn(Optional.of(existingStudent));
+        given(superFrogStudentRepository.save(existingStudent)).willReturn(existingStudent);
+
+        // When
+        SuperFrogStudent updatedStudent = superFrogStudentService.update(2, updatedInfo);
+
+        // Then
+        assertThat(updatedStudent.getFirstName()).isEqualTo("UpdatedFirstName");
+        assertThat(updatedStudent.getLastName()).isEqualTo("UpdatedLastName");
+        assertThat(updatedStudent.getEmail()).isEqualTo("updatedEmail@tcu.edu");
+        assertThat(updatedStudent.getPhone()).isEqualTo("999-999-9999");
+        assertThat(updatedStudent.getAddress()).isEqualTo("999 Updated Address Dr");
+        assertThat(updatedStudent.getActive()).isEqualTo(false);
+        assertThat(updatedStudent.getInternational()).isEqualTo(true);
+        assertThat(updatedStudent.getPaymentPreference()).isEqualTo(PaymentPreference.PICK_UP_CHECK);
+
+        verify(superFrogStudentRepository, times(1)).findById(2);
+        verify(superFrogStudentRepository, times(1)).save(any(SuperFrogStudent.class));
     }
 
     @Test
@@ -164,4 +199,6 @@ public class SuperFrogStudentServiceTest {
         // Then
         assertThat(foundStudents).isEmpty();
     }
+
+
 }
