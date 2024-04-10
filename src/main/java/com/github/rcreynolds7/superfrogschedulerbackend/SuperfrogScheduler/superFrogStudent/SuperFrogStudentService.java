@@ -1,5 +1,6 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,7 +22,7 @@ public class SuperFrogStudentService {
 
     public SuperFrogStudent findById(Integer superFrogStudentId) {
         return this.superFrogStudentRepository.findById(superFrogStudentId).
-                orElseThrow(() -> new SuperFrogStudentNotFoundException(superFrogStudentId));
+                orElseThrow(() -> new ObjectNotFoundException("superfrogstudent", superFrogStudentId));
     }
 
     public List<SuperFrogStudent> findAll() {
@@ -40,7 +41,7 @@ public class SuperFrogStudentService {
 
                     return this.superFrogStudentRepository.save(oldSuperFrogStudent);
                 })
-                .orElseThrow(() -> new SuperFrogStudentNotFoundException(superFrogStudentId));
+                .orElseThrow(() -> new ObjectNotFoundException("superfrogstudent", superFrogStudentId));
     }
 
     public List<SuperFrogStudent> searchStudents(String firstName, String lastName, String email, String phone) {
