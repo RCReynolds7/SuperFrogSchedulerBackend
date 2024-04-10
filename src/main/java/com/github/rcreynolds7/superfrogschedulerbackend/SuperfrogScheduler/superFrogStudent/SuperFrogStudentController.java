@@ -4,6 +4,8 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.syste
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("${api.endpoint.base-url}/superfrog-students")
@@ -18,37 +20,34 @@ public class SuperFrogStudentController {
     public Result updateSuperFrogStudent(@PathVariable Integer superFrogStudentId, @RequestBody SuperFrogStudent superFrogStudentUpdate) {
         SuperFrogStudent superFrogStudent = superFrogStudentService.findById(superFrogStudentId);
 
-        if (superFrogStudentUpdate.getFirstName() != null && !superFrogStudentUpdate.getFirstName().isEmpty()) {
-            superFrogStudent.setFirstName(superFrogStudentUpdate.getFirstName());
-        }
+        Optional.ofNullable(superFrogStudentUpdate.getFirstName())
+                .filter(name -> !name.isEmpty())
+                .ifPresent(superFrogStudent::setFirstName);
 
-        if (superFrogStudentUpdate.getLastName() != null && !superFrogStudentUpdate.getLastName().isEmpty()) {
-            superFrogStudent.setLastName(superFrogStudentUpdate.getLastName());
-        }
+        Optional.ofNullable(superFrogStudentUpdate.getLastName())
+                .filter(name -> !name.isEmpty())
+                .ifPresent(superFrogStudent::setLastName);
 
-        if (superFrogStudentUpdate.getEmail() != null && !superFrogStudentUpdate.getEmail().isEmpty()) {
-            superFrogStudent.setEmail(superFrogStudentUpdate.getEmail());
-        }
+        Optional.ofNullable(superFrogStudentUpdate.getEmail())
+                .filter(email -> !email.isEmpty())
+                .ifPresent(superFrogStudent::setEmail);
 
-        if (superFrogStudentUpdate.getPhone() != null && !superFrogStudentUpdate.getPhone().isEmpty()) {
-            superFrogStudent.setPhone(superFrogStudentUpdate.getPhone());
-        }
+        Optional.ofNullable(superFrogStudentUpdate.getPhone())
+                .filter(phone -> !phone.isEmpty())
+                .ifPresent(superFrogStudent::setPhone);
 
-        if (superFrogStudentUpdate.getAddress() != null && !superFrogStudentUpdate.getAddress().isEmpty()) {
-            superFrogStudent.setAddress(superFrogStudentUpdate.getAddress());
-        }
+        Optional.ofNullable(superFrogStudentUpdate.getAddress())
+                .filter(address -> !address.isEmpty())
+                .ifPresent(superFrogStudent::setAddress);
 
-        if (superFrogStudentUpdate.getActive() != null) {
-            superFrogStudent.setActive(superFrogStudentUpdate.getActive());
-        }
+        Optional.ofNullable(superFrogStudentUpdate.getActive())
+                .ifPresent(superFrogStudent::setActive);
 
-        if (superFrogStudentUpdate.getInternational() != null) {
-            superFrogStudent.setInternational(superFrogStudentUpdate.getInternational());
-        }
+        Optional.ofNullable(superFrogStudentUpdate.getInternational())
+                .ifPresent(superFrogStudent::setInternational);
 
-        if (superFrogStudentUpdate.getPaymentPreference() != null) {
-            superFrogStudent.setPaymentPreference(superFrogStudentUpdate.getPaymentPreference());
-        }
+        Optional.ofNullable(superFrogStudentUpdate.getPaymentPreference())
+                .ifPresent(superFrogStudent::setPaymentPreference);
 
         // Update the entity in the database
         superFrogStudentService.update(superFrogStudentId, superFrogStudent);
