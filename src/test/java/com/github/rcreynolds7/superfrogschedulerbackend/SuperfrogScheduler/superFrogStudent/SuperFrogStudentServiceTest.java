@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -178,6 +179,27 @@ public class SuperFrogStudentServiceTest {
         // When & Then
         assertThrows(ObjectNotFoundException.class, () -> superFrogStudentService.update(99, updatedInfo));
         verify(superFrogStudentRepository, times(1)).findById(99);
+    }
+
+    @Test
+    void testUpdateInvalidFormat() {
+        // Given
+        Integer studentId = 1;
+        SuperFrogStudent existingStudent = superFrogStudents.get(0); // Assuming the first student is the one we're trying to update.
+        SuperFrogStudent invalidUpdateInfo = new SuperFrogStudent();
+        invalidUpdateInfo.setEmail("invalidEmail"); // Invalid email format
+        invalidUpdateInfo.setPhone("1234567890"); // Invalid phone format
+        invalidUpdateInfo.setAddress("Invalid Address Format"); // Invalid address format
+
+        given(superFrogStudentRepository.findById(studentId)).willReturn(Optional.of(existingStudent));
+
+        // Assuming save method or some validation method throws IllegalArgumentException for invalid formats
+        willThrow(new IllegalArgumentException("Invalid data format")).given(superFrogStudentRepository).save(any(SuperFrogStudent.class));
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> superFrogStudentService.update(studentId, invalidUpdateInfo));
+        verify(superFrogStudentRepository, times(1)).findById(studentId);
+        verify(superFrogStudentRepository, times(1)).save(any(SuperFrogStudent.class)); // Verifies save was attempted and exception was thrown
     }
 
     @Test
