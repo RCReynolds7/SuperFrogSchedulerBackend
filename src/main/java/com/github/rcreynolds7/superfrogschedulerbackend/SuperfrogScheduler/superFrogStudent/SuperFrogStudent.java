@@ -1,9 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.PaymentPreference;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
@@ -11,17 +9,28 @@ public class SuperFrogStudent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     @NotEmpty(message = "firstname is required.")
     private String firstName;
+
     @NotEmpty(message = "lastname is required.")
     private String lastName;
+
     @NotEmpty(message = "email is required.")
     private String email;
+
     @NotEmpty(message = "phone is required.")
     private String phone;
+
     @NotEmpty(message = "address is required.")
     private String address;
-    private Boolean isActive;
+
+    private Boolean isActive = true;
+
+    private Boolean isInternational = false;
+
+    @Enumerated(EnumType.STRING) // This stores the Enum as a String in the database
+    private PaymentPreference paymentPreference = PaymentPreference.MAIL_CHECK;
 
     // Constructor
     public SuperFrogStudent() {
@@ -84,5 +93,21 @@ public class SuperFrogStudent {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Boolean getInternational() {
+        return isInternational;
+    }
+
+    public void setInternational(Boolean international) {
+        isInternational = international;
+    }
+
+    public PaymentPreference getPaymentPreference() {
+        return paymentPreference;
+    }
+
+    public void setPaymentPreference(PaymentPreference paymentPreference) {
+        this.paymentPreference = paymentPreference;
     }
 }
