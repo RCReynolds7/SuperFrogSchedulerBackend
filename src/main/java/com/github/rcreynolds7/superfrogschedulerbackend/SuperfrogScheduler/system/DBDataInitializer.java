@@ -1,5 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.customer.Customer;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.customer.CustomerRepository;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -8,9 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class DBDataInitializer implements CommandLineRunner {
     private final SuperFrogStudentRepository superFrogStudentRepository;
+    private final CustomerRepository customerRepository;
 
-    public DBDataInitializer(SuperFrogStudentRepository superFrogStudentRepository) {
+    public DBDataInitializer(SuperFrogStudentRepository superFrogStudentRepository, CustomerRepository customerRepository) {
         this.superFrogStudentRepository = superFrogStudentRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -51,6 +55,14 @@ public class DBDataInitializer implements CommandLineRunner {
         superFrogStudentRepository.save(s2);
         superFrogStudentRepository.save(s3);
         superFrogStudentRepository.save(s4);
+
+        Customer c1 = new Customer();
+        c1.setFirstName("ana");
+        c1.setLastName("park");
+        c1.setEmail("anapark@gmail.com");
+        c1.setPhone("(563) 522-7491");
+
+        customerRepository.save(c1);
 
     }
 }
