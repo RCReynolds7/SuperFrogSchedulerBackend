@@ -21,7 +21,8 @@ public record SuperFrogStudentDto (
         @NotBlank(message = "Phone number is required.")
         String phone,
 
-        String profileInfo, // Optional
+        @NotBlank(message = "Address is required.")
+        String address, // Optional
 
         @NotNull(message = "Active status is required.")
         Boolean isActive

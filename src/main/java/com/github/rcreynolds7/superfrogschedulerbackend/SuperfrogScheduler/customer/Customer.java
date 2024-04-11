@@ -1,28 +1,35 @@
-package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spiritDirector;
+package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.customer;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
-public class SpiritDirector {
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     @NotEmpty(message = "firstname is required.")
     private String firstName;
+
     @NotEmpty(message = "lastname is required.")
     private String lastName;
+
     @NotEmpty(message = "email is required.")
+    @Email(message = "email must be a valid email address.")
     private String email;
+
     @NotEmpty(message = "phone is required.")
+    @Pattern(regexp = "^\\(\\d{3}\\)\\s\\d{3}-\\d{4}$", message = "phone number must be in the format (999) 999-9999")
     private String phone;
 
-    // Constructor
-
-    public SpiritDirector() {
+    // Construct
+    public Customer() {
 
     }
 
