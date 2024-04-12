@@ -17,10 +17,8 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @PostMapping("/{customerId}/request-superfrog-appearance")
-    public Result requestSuperfrogAppearance(@PathVariable Integer customerId, @RequestBody AppearanceRequest appearanceRequest) {
-        // Check if customer exists in the database
-        customerService.findById(customerId);
+    @PostMapping("/request-superfrog-appearance")
+    public Result requestSuperfrogAppearance(@RequestBody AppearanceRequest appearanceRequest) {
 
         // Create appearance request service in the database
         appearanceRequestService.save(appearanceRequest);
