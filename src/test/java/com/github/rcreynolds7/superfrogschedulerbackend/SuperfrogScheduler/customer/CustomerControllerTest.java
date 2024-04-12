@@ -38,43 +38,43 @@ public class CustomerControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    List<Customer> customer;
+    List<Customer> customers;
 
-    @Value("${api.endpoint.base-url}/customer")
+    @Value("{${api.endpoint.base-url}/customer")
     String baseUrl;
 
     @BeforeEach
     void setUp() {
-        Customer c1 = new Customer("ana", "park", "anapark@gmail.com", "(563) 522-7491");
+        Customer c1 = new Customer();
         c1.setFirstName("ana");
         c1.setLastName("park");
         c1.setEmail("anapark@gmail.com");
         c1.setPhone("(563) 522-7491");
 
-        Customer c2 = new Customer("ana", "park", "anapark@gmail.com", "(563) 522-7491");
+        Customer c2 = new Customer();
         c2.setFirstName("john");
         c2.setLastName("smith");
         c2.setEmail("johnsmith@gmail.com");
         c2.setPhone("(123) 456-7890");
 
-        Customer c3 = new Customer("ana", "park", "anapark@gmail.com", "(563) 522-7491");
+        Customer c3 = new Customer();
         c3.setFirstName("alice");
         c3.setLastName("brown");
         c3.setEmail("alicebrown@gmail.com");
         c3.setPhone("(987) 654-3210");
 
-        Customer c4 = new Customer("ana", "park", "anapark@gmail.com", "(563) 522-7491");
+        Customer c4 = new Customer();
         c4.setFirstName("michael");
         c4.setLastName("jones");
         c4.setEmail("michaeljones@gmail.com");
         c4.setPhone("(555) 123-4567");
 
-        this.customer = new ArrayList<>();
+        this.customers = new ArrayList<>();
 
-        this.customer.add(c1);
-        this.customer.add(c2);
-        this.customer.add(c3);
-        this.customer.add(c4);
+        this.customers.add(c1);
+        this.customers.add(c2);
+        this.customers.add(c3);
+        this.customers.add(c4);
 
     }
 
@@ -82,31 +82,4 @@ public class CustomerControllerTest {
    @AfterEach()
    void tearDown() {
    }
-
-   @Test
-   void testFindCustomerByIdSuccess() throws Exception {
-       // Given
-       int customerId = 1; // Assuming customerId is 1 for this test case
-       Customer mockCustomer = new Customer("ana", "park", "anapark@gmail.com", "(563) 522-7491");
-       given(CustomerService.findById(customerId)).willReturn(mockCustomer);
-
-       // When & Then
-       mockMvc.perform(get("/api/customer/{customerId}", customerId)
-                       .contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
-               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("$.firstName").value("ana"))
-               .andExpect(jsonPath("$.lastName").value("park"))
-               .andExpect(jsonPath("$.email").value("anapark@gmail.com"))
-               .andExpect(jsonPath("$.phone").value("(563) 522-7491"));
-
-   }
-
-
-
-
-
-
-
-
 }

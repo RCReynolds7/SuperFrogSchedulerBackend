@@ -29,7 +29,7 @@ public class Customer {
     private String phone;
 
     // Construct
-    public Customer(String ana, String park, String mail, String s) {
+    public Customer() {
 
     }
 

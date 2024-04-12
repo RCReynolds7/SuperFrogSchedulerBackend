@@ -56,25 +56,25 @@ public class DBDataInitializer implements CommandLineRunner {
         superFrogStudentRepository.save(s3);
         superFrogStudentRepository.save(s4);
 
-        Customer c1 = new Customer("ana", "park", "anapark@gmail.com", "(563) 522-7491");
+        Customer c1 = new Customer();
         c1.setFirstName("ana");
         c1.setLastName("park");
         c1.setEmail("anapark@gmail.com");
         c1.setPhone("(563) 522-7491");
 
-        Customer c2 = new Customer("ana", "park", "anapark@gmail.com", "(563) 522-7491");
+        Customer c2 = new Customer();
         c2.setFirstName("john");
         c2.setLastName("smith");
         c2.setEmail("johnsmith@gmail.com");
         c2.setPhone("(123) 456-7890");
 
-        Customer c3 = new Customer("ana", "park", "anapark@gmail.com", "(563) 522-7491");
+        Customer c3 = new Customer();
         c3.setFirstName("alice");
         c3.setLastName("brown");
         c3.setEmail("alicebrown@gmail.com");
         c3.setPhone("(987) 654-3210");
 
-        Customer c4 = new Customer("ana", "park", "anapark@gmail.com", "(563) 522-7491");
+        Customer c4 = new Customer();
         c4.setFirstName("michael");
         c4.setLastName("jones");
         c4.setEmail("michaeljones@gmail.com");
