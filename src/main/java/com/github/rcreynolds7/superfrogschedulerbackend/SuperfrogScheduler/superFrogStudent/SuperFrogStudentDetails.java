@@ -7,16 +7,16 @@ import java.util.List;
 public class SuperFrogStudentDetails {
     private final String firstName;
     private final String lastName;
-    private final String phone;
     private final String email;
+    private final String phone;
     private final List<AppearanceRequest> signedUpAppearances;
     private final List<AppearanceRequest> completedAppearances;
 
-    public SuperFrogStudentDetails(String firstName, String lastName, String phone, String email, List<AppearanceRequest> signedUpAppearances, List<AppearanceRequest> completedAppearances) {
+    public SuperFrogStudentDetails(String firstName, String lastName, String email, String phone, List<AppearanceRequest> signedUpAppearances, List<AppearanceRequest> completedAppearances) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.phone = phone;
         this.email = email;
+        this.phone = phone;
         this.signedUpAppearances = signedUpAppearances;
         this.completedAppearances = completedAppearances;
     }
