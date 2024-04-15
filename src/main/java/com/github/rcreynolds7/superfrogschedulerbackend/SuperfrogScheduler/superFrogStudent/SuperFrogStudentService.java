@@ -1,5 +1,8 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestRepository;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class SuperFrogStudentService {
     private final SuperFrogStudentRepository superFrogStudentRepository;
+    private final AppearanceRequestRepository appearanceRequestRepository;
 
     @Autowired
-    public SuperFrogStudentService(SuperFrogStudentRepository superFrogStudentRepository) {
+    public SuperFrogStudentService(SuperFrogStudentRepository superFrogStudentRepository, AppearanceRequestRepository appearanceRequestRepository) {
         this.superFrogStudentRepository = superFrogStudentRepository;
+        this.appearanceRequestRepository = appearanceRequestRepository;
     }
 
     public SuperFrogStudent findById(Integer superFrogStudentId) {
@@ -61,5 +65,26 @@ public class SuperFrogStudentService {
             spec = spec.and(SuperFrogStudentSpecifications.withPhone(phone));
         }
         return superFrogStudentRepository.findAll(spec);
+    }
+
+    public SuperFrogStudentDetails getDetails(Integer superFrogStudentId) {
+        SuperFrogStudent student = findById(superFrogStudentId);
+
+        List<AppearanceRequest> signedUpAppearances = appearanceRequestRepository.findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(student, List.of(
+                AppearanceRequestStatus.PENDING,
+                AppearanceRequestStatus.APPROVED,
+                AppearanceRequestStatus.ASSIGNED
+        ));
+
+        List<AppearanceRequest> completedAppearances = appearanceRequestRepository.findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(student, List.of(AppearanceRequestStatus.COMPLETED));
+
+        return new SuperFrogStudentDetails(
+                student.getFirstName(),
+                student.getLastName(),
+                student.getEmail(),
+                student.getPhone(),
+                signedUpAppearances,
+                completedAppearances
+        );
     }
 }
