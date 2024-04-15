@@ -2,6 +2,8 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.cust
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.dto.AppearanceRequestDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -40,7 +41,7 @@ public class CustomerControllerTest {
 
     List<Customer> customers;
 
-    @Value("{${api.endpoint.base-url}/customer")
+    @Value("${api.endpoint.base-url}/customer")
     String baseUrl;
 
     @BeforeEach
@@ -75,11 +76,72 @@ public class CustomerControllerTest {
         this.customers.add(c2);
         this.customers.add(c3);
         this.customers.add(c4);
-
     }
 
 
-   @AfterEach()
-   void tearDown() {
-   }
-}
+    @AfterEach()
+    void tearDown() {
+    }
+
+    @Test
+    void testPostAppearanceRequestSuccess() throws Exception {
+        // Given
+        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "Lee", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah");
+        String json = this.objectMapper.writeValueAsString(appearanceRequestDto);
+
+        AppearanceRequest savedAppearanceRequest = new AppearanceRequest();
+        savedAppearanceRequest.setId(1);
+        savedAppearanceRequest.setFirstName("Tom");
+        savedAppearanceRequest.setLastName("Lee");
+        savedAppearanceRequest.setEmail("test@gmail.com");
+        savedAppearanceRequest.setPhone("(123) 456-7901");
+        savedAppearanceRequest.setTypeOfEvent("dumb event");
+        savedAppearanceRequest.setEventTitle("test title");
+        savedAppearanceRequest.setEventAddress("2901 Stadium Dr, Fort Worth, TX 76109");
+        savedAppearanceRequest.setIsOnCampus("yes");
+        savedAppearanceRequest.setSpecialInstructions("need light support");
+        savedAppearanceRequest.setExpensesOrBenefits("none");
+        savedAppearanceRequest.setOtherOrganizationsInvolved("none");
+        savedAppearanceRequest.setDetailedEventDescription("blah blah");
+
+        this.mockMvc.perform(post(this.baseUrl + "/request-superfrog-appearance").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("SuperFrog appearance request created successfully."))
+                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.data.firstName").value(savedAppearanceRequest.getFirstName()));
+
+
+    }
+
+    @Test
+    void testPostAppearanceRequestErrorWithEmptyField() throws Exception {
+        // Given
+        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah");
+        String json = this.objectMapper.writeValueAsString(appearanceRequestDto);
+
+        AppearanceRequest savedAppearanceRequest = new AppearanceRequest();
+        savedAppearanceRequest.setId(1);
+        savedAppearanceRequest.setFirstName("Tom");
+        savedAppearanceRequest.setLastName("");
+        savedAppearanceRequest.setEmail("test@gmail.com");
+        savedAppearanceRequest.setPhone("(123) 456-7901");
+        savedAppearanceRequest.setTypeOfEvent("dumb event");
+        savedAppearanceRequest.setEventTitle("test title");
+        savedAppearanceRequest.setEventAddress("2901 Stadium Dr, Fort Worth, TX 76109");
+        savedAppearanceRequest.setIsOnCampus("yes");
+        savedAppearanceRequest.setSpecialInstructions("need light support");
+        savedAppearanceRequest.setExpensesOrBenefits("none");
+        savedAppearanceRequest.setOtherOrganizationsInvolved("none");
+        savedAppearanceRequest.setDetailedEventDescription("blah blah");
+
+        this.mockMvc.perform(post(this.baseUrl + "/request-superfrog-appearance").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("SuperFrog appearance request created successfully."))
+                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.data.firstName").value(savedAppearanceRequest.getFirstName()));
+    }
+
+    }
+

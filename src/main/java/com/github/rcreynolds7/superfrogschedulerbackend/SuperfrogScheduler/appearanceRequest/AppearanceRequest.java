@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Pattern;
 public class AppearanceRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer requestId;
+    private Integer id;
 
     @NotEmpty(message = "firstname is required.")
     private String firstName;
@@ -61,12 +61,13 @@ public class AppearanceRequest {
 
     // Getter & Setter
 
-    public Integer getRequestId() {
-        return requestId;
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setRequestId(Integer requestId) {
-        this.requestId = requestId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getFirstName() {

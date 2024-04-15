@@ -19,10 +19,10 @@ public class CustomerController {
 
     @PostMapping("/request-superfrog-appearance")
     public Result requestSuperfrogAppearance(@RequestBody AppearanceRequest appearanceRequest) {
-
         // Create appearance request service in the database
-        appearanceRequestService.save(appearanceRequest);
+        AppearanceRequest savedAppearanceRequest = this.appearanceRequestService.save(appearanceRequest);
 
-        return new Result(true, StatusCode.SUCCESS, "SuperFrog appearance request created successfully.");
+
+        return new Result(true, StatusCode.SUCCESS, "SuperFrog appearance request created successfully.", savedAppearanceRequest);
     }
 }
