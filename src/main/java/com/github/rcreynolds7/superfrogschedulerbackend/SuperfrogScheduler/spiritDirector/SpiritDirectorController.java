@@ -1,5 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spiritDirector;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.Event;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
@@ -16,9 +18,11 @@ import java.util.stream.Collectors;
 @RequestMapping("${api.endpoint.base-url}/spirit-directors")
 public class SpiritDirectorController {
     private final SuperFrogStudentService superFrogStudentService;
+    private final EventService eventService;
 
-    public SpiritDirectorController(SuperFrogStudentService superFrogStudentService) {
+    public SpiritDirectorController(SuperFrogStudentService superFrogStudentService, EventService eventService) {
         this.superFrogStudentService = superFrogStudentService;
+        this.eventService = eventService;
     }
 
     @PutMapping("superfrog-students/{superFrogStudentId}/deactivate")
@@ -64,5 +68,20 @@ public class SpiritDirectorController {
         SuperFrogStudentDetails student = superFrogStudentService.getDetails(superFrogStudentId);
 
         return new Result(true, StatusCode.SUCCESS, "SuperFrog student details retrieved successfully", student);
+    }
+
+    @PostMapping("/events")
+    public Event createEvent(@RequestBody Event event) {
+        return eventService.createEvent(event);
+    }
+
+    @PutMapping("/events/{eventId}")
+    public Event updateEvent(@PathVariable Integer eventId, @RequestBody Event eventDetails) {
+        return eventService.updateEvent(eventId, eventDetails);
+    }
+
+    @DeleteMapping("/events/{eventId}")
+    public void deleteEvent(@PathVariable Integer eventId) {
+        eventService.deleteEvent(eventId);
     }
 }
