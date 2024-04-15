@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -77,7 +78,26 @@ public class SpiritDirectorController {
 
     @PutMapping("/events/{eventId}")
     public Event updateEvent(@PathVariable Integer eventId, @RequestBody Event eventDetails) {
-        return eventService.updateEvent(eventId, eventDetails);
+        Event event = eventService.findById(eventId);
+
+        Optional.ofNullable(eventDetails.getTitle())
+                .filter(title -> !title.isEmpty())
+                .ifPresent(event::setTitle);
+
+        Optional.ofNullable(eventDetails.getStartDate())
+                .ifPresent(event::setStartDate);
+
+        Optional.ofNullable(eventDetails.getEndDate())
+                .ifPresent(event::setEndDate);
+
+        Optional.ofNullable(eventDetails.getRecurrenceStartDate())
+                .ifPresent(event::setRecurrenceStartDate);
+
+        Optional.ofNullable(eventDetails.getRecurrenceEndDate())
+                .ifPresent(event::setRecurrenceEndDate);
+
+        // Update the entity in the database
+        return eventService.updateEvent(eventId, event);
     }
 
     @DeleteMapping("/events/{eventId}")
