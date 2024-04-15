@@ -1,6 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spiritDirector;
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
@@ -56,5 +57,12 @@ public class SpiritDirectorController {
                 .collect(Collectors.toList());
 
         return new Result(true, StatusCode.SUCCESS, "SuperFrog student search completed successfully", resultDtos);
+    }
+
+    @GetMapping("superfrog-students/{superFrogStudentId}/details")
+    public Result getSuperFrogStudentDetails(@PathVariable Integer superFrogStudentId) {
+        SuperFrogStudentDetails student = superFrogStudentService.getDetails(superFrogStudentId);
+
+        return new Result(true, StatusCode.SUCCESS, "SuperFrog student details retrieved successfully", student);
     }
 }
