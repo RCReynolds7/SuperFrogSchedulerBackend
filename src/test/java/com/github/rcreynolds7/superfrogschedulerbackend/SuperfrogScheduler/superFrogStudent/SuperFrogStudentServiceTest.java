@@ -1,6 +1,9 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
-import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.PaymentPreference;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestRepository;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.PaymentPreference;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +32,9 @@ import static org.mockito.Mockito.verify;
 public class SuperFrogStudentServiceTest {
     @Mock
     SuperFrogStudentRepository superFrogStudentRepository;
+
+    @Mock
+    AppearanceRequestRepository appearanceRequestRepository;
 
     @InjectMocks
     SuperFrogStudentService superFrogStudentService;
@@ -78,6 +84,7 @@ public class SuperFrogStudentServiceTest {
         this.superFrogStudents.add(s2);
         this.superFrogStudents.add(s3);
         this.superFrogStudents.add(s4);
+
     }
 
     @AfterEach
@@ -228,4 +235,55 @@ public class SuperFrogStudentServiceTest {
     }
 
 
+    @Test
+    void testGetDetailsSuccess() {
+        // Given
+        SuperFrogStudent student = superFrogStudents.get(0);
+        given(superFrogStudentRepository.findById(student.getId())).willReturn(Optional.of(student));
+
+        AppearanceRequest pendingRequest = new AppearanceRequest();
+        pendingRequest.setFirstName("John");
+        pendingRequest.setLastName("Doe");
+        pendingRequest.setEmail("john.doe@example.com");
+        pendingRequest.setPhone("(123) 456-7890");
+        pendingRequest.setTypeOfEvent("Birthday Party");
+        pendingRequest.setEventAddress("123 Main St, Fort Worth, TX 76109");
+        pendingRequest.setAssignedSuperFrogStudent(student);
+        pendingRequest.setAppearanceRequestStatus(AppearanceRequestStatus.PENDING);
+
+        AppearanceRequest completedRequest = new AppearanceRequest();
+        completedRequest.setFirstName("Jane");
+        completedRequest.setLastName("Smith");
+        completedRequest.setEmail("jane.smith@example.com");
+        completedRequest.setPhone("(987) 654-3210");
+        completedRequest.setTypeOfEvent("Graduation Party");
+        completedRequest.setEventAddress("456 Elm St, Fort Worth, TX 76109");
+        completedRequest.setAssignedSuperFrogStudent(student);
+        completedRequest.setAppearanceRequestStatus(AppearanceRequestStatus.COMPLETED);
+
+        given(appearanceRequestRepository.findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(
+                student, List.of(AppearanceRequestStatus.PENDING, AppearanceRequestStatus.APPROVED, AppearanceRequestStatus.ASSIGNED)))
+                .willReturn(List.of(pendingRequest));
+
+        given(appearanceRequestRepository.findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(
+                student, List.of(AppearanceRequestStatus.COMPLETED)))
+                .willReturn(List.of(completedRequest));
+
+        // When
+        SuperFrogStudentDetails details = superFrogStudentService.getDetails(student.getId());
+
+        // Then
+        assertThat(details.getFirstName()).isEqualTo(student.getFirstName());
+        assertThat(details.getLastName()).isEqualTo(student.getLastName());
+        assertThat(details.getEmail()).isEqualTo(student.getEmail());
+        assertThat(details.getPhone()).isEqualTo(student.getPhone());
+        assertThat(details.getSignedUpAppearances()).containsExactly(pendingRequest);
+        assertThat(details.getCompletedAppearances()).containsExactly(completedRequest);
+
+        verify(superFrogStudentRepository, times(1)).findById(student.getId());
+        verify(appearanceRequestRepository, times(1)).findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(
+                student, List.of(AppearanceRequestStatus.PENDING, AppearanceRequestStatus.APPROVED, AppearanceRequestStatus.ASSIGNED));
+        verify(appearanceRequestRepository, times(1)).findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(
+                student, List.of(AppearanceRequestStatus.COMPLETED));
+    }
 }

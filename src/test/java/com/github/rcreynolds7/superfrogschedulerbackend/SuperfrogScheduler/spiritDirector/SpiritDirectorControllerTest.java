@@ -1,9 +1,12 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spiritDirector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -149,4 +152,66 @@ public class SpiritDirectorControllerTest {
                 .andExpect(jsonPath("$.message").value("At least one search parameter must be provided"));
     }
 
+    @Test
+    void getSuperFrogStudentDetailsSuccess() throws Exception {
+        // Given
+        SuperFrogStudent student = new SuperFrogStudent();
+        student.setId(1);
+        student.setFirstName("Tom");
+        student.setLastName("Lee");
+        student.setEmail("tom@example.com");
+        student.setPhone("(123) 456-7890");
+
+        AppearanceRequest request1 = new AppearanceRequest();
+        request1.setAppearanceRequestStatus(AppearanceRequestStatus.PENDING);
+        request1.setAssignedSuperFrogStudent(student);
+
+        AppearanceRequest request2 = new AppearanceRequest();
+        request2.setAppearanceRequestStatus(AppearanceRequestStatus.APPROVED);
+        request2.setAssignedSuperFrogStudent(student);
+
+        AppearanceRequest request3 = new AppearanceRequest();
+        request3.setAppearanceRequestStatus(AppearanceRequestStatus.COMPLETED);
+        request3.setAssignedSuperFrogStudent(student);
+
+        List<AppearanceRequest> signedUpAppearances = List.of(request1, request2);
+        List<AppearanceRequest> completedAppearances = List.of(request3);
+
+        SuperFrogStudentDetails expectedDetails = new SuperFrogStudentDetails(
+                "Tom",
+                "Lee",
+                "tom@example.com",
+                "(123) 456-7890",
+                signedUpAppearances,
+                completedAppearances
+        );
+
+        given(superFrogStudentService.findById(1)).willReturn(student);
+        given(superFrogStudentService.getDetails(1)).willReturn(expectedDetails);
+
+        // When & Then
+        mockMvc.perform(get(baseUrl + "/superfrog-students/{superFrogStudentId}/details", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("SuperFrog student details retrieved successfully"))
+                .andExpect(jsonPath("$.data.firstName").value("Tom"))
+                .andExpect(jsonPath("$.data.lastName").value("Lee"))
+                .andExpect(jsonPath("$.data.email").value("tom@example.com"))
+                .andExpect(jsonPath("$.data.phone").value("(123) 456-7890"))
+                .andExpect(jsonPath("$.data.signedUpAppearances.length()").value(2))
+                .andExpect(jsonPath("$.data.completedAppearances.length()").value(1));
+    }
+
+
+    @Test
+    void getSuperFrogStudentDetailsWithNoParameters() throws Exception {
+        // When & Then
+        mockMvc.perform(get(baseUrl + "/superfrog-students/1/details")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("SuperFrog student details retrieved successfully"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
 }

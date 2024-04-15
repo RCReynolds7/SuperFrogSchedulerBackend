@@ -1,9 +1,12 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestRepository;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.customer.Customer;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.customer.CustomerRepository;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentRepository;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +14,12 @@ import org.springframework.stereotype.Component;
 public class DBDataInitializer implements CommandLineRunner {
     private final SuperFrogStudentRepository superFrogStudentRepository;
     private final CustomerRepository customerRepository;
+    private final AppearanceRequestRepository appearanceRequestRepository;
 
-    public DBDataInitializer(SuperFrogStudentRepository superFrogStudentRepository, CustomerRepository customerRepository) {
+    public DBDataInitializer(SuperFrogStudentRepository superFrogStudentRepository, CustomerRepository customerRepository, AppearanceRequestRepository appearanceRequestRepository) {
         this.superFrogStudentRepository = superFrogStudentRepository;
         this.customerRepository = customerRepository;
+        this.appearanceRequestRepository = appearanceRequestRepository;
     }
 
     @Override
@@ -85,5 +90,45 @@ public class DBDataInitializer implements CommandLineRunner {
         customerRepository.save(c3);
         customerRepository.save(c4);
 
+        AppearanceRequest a1 = new AppearanceRequest();
+        a1.setFirstName("james");
+        a1.setLastName("smith");
+        a1.setEmail("james.smith@gmail.com");
+        a1.setPhone("(123) 456-7890");
+        a1.setTypeOfEvent("Birthday Party");
+        a1.setEventAddress("123 Main St, Fort Worth, TX 76109");
+        a1.setIsOnCampus("Yes");
+        a1.setSpecialInstructions("Please bring a cake");
+        a1.setExpensesOrBenefits("Free food");
+        a1.setAssignedSuperFrogStudent(s1);
+
+        AppearanceRequest a2 = new AppearanceRequest();
+        a2.setFirstName("sarah");
+        a2.setLastName("jones");
+        a2.setEmail("sarah.jones@tcu.edu");
+        a2.setPhone("(987) 654-3210");
+        a2.setTypeOfEvent("Graduation Party");
+        a2.setEventAddress("123 Elm St, Fort Worth, TX 76109");
+        a2.setIsOnCampus("No");
+        a2.setSpecialInstructions("Please bring a gift");
+        a2.setExpensesOrBenefits("Free food");
+        a2.setAssignedSuperFrogStudent(s2);
+
+        AppearanceRequest a3 = new AppearanceRequest();
+        a3.setFirstName("michael");
+        a3.setLastName("jones");
+        a3.setEmail("michael.jones@uta.edu");
+        a3.setPhone("(555) 123-4567");
+        a3.setTypeOfEvent("Graduation Party");
+        a3.setEventAddress("123 Elm St, Arlington, TX 76019");
+        a3.setIsOnCampus("No");
+        a3.setSpecialInstructions("Please bring a gift");
+        a3.setExpensesOrBenefits("Free food");
+        a3.setAssignedSuperFrogStudent(s1);
+        a3.setAppearanceRequestStatus(AppearanceRequestStatus.COMPLETED);
+
+        appearanceRequestRepository.save(a1);
+        appearanceRequestRepository.save(a2);
+        appearanceRequestRepository.save(a3);
     }
 }
