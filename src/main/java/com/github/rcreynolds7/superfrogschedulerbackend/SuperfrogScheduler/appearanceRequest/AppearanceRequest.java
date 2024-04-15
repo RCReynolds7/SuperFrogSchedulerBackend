@@ -170,6 +170,22 @@ public class AppearanceRequest {
     public void setDetailedEventDescription(String detailedEventDescription) {
         this.detailedEventDescription = detailedEventDescription;
     }
+
+    public AppearanceRequestStatus getAppearanceRequestStatus() {
+        return appearanceRequestStatus;
+    }
+
+    public void setAppearanceRequestStatus(AppearanceRequestStatus appearanceRequestStatus) {
+        this.appearanceRequestStatus = appearanceRequestStatus;
+    }
+
+    public SuperFrogStudent getAssignedSuperFrogStudent() {
+        return assignedSuperFrogStudent;
+    }
+
+    public void setAssignedSuperFrogStudent(SuperFrogStudent assignedSuperFrogStudent) {
+        this.assignedSuperFrogStudent = assignedSuperFrogStudent;
+    }
 }
 
 
