@@ -1,9 +1,8 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -53,6 +52,12 @@ public class AppearanceRequest {
 
     @NotEmpty(message = "detailed event descripiton required.")
     private String detailedEventDescription;
+
+    @Enumerated(EnumType.STRING) // This stores the Enum as a String in the database
+    private AppearanceRequestStatus appearanceRequestStatus = AppearanceRequestStatus.PENDING;
+
+    @ManyToOne
+    private SuperFrogStudent assignedSuperFrogStudent;
 
     // Construct
 
