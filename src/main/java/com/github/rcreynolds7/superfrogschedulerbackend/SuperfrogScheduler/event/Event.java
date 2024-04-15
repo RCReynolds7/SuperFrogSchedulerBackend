@@ -27,7 +27,8 @@ public class Event {
     @NotEmpty(message = "end date is required.")
     private LocalDateTime endDate;
 
-    private boolean isRecurring = false;
+    @NotEmpty(message = "isRecurring is required.")
+    private boolean isRecurring;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime recurrenceStartDate;
