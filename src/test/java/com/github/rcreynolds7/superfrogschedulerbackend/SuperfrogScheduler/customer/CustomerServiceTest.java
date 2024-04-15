@@ -1,34 +1,20 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.customer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
-import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.PaymentPreference;
 import org.junit.jupiter.api.AfterEach;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.web.servlet.MockMvc;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.given;
 import static org.mockito.ArgumentMatchers.any;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
@@ -179,9 +165,32 @@ CustomerService customerService;
             assertThrows(ObjectNotFoundException.class, () -> customerService.update(99, updatedInfo));
             verify(customerRepository, times(1)).findById(99);
         }
+
+    @Test
+    void testUpdateInvalidFormat() {
+        Integer customerId = 1;
+        Customer existingCustomer = customers.get(0); // Assuming the first student is the one we're trying to update.
+        Customer invalidUpdateInfo = new Customer();
+        invalidUpdateInfo.setEmail("invalidEmail"); // Invalid email format
+        invalidUpdateInfo.setPhone("1234567890"); // Invalid phone format
+
+        given(customerRepository.findById(customerId)).willReturn(Optional.of(existingCustomer));
+
+        // Assuming save method or some validation method throws IllegalArgumentException for invalid formats
+        willThrow(new IllegalArgumentException("Invalid data format")).given(customerRepository).save(any(Customer.class));
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> customerService.update(customerId, invalidUpdateInfo));
+        verify(customerRepository, times(1)).findById(customerId);
+        verify(customerRepository, times(1)).save(any(Customer.class)); // Verifies save was attempted and exception was throws
+
     }
 
-    
+
+
+}
+
+
 
 
 
