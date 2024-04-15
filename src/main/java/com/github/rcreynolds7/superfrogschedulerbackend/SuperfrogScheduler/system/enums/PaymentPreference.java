@@ -1,4 +1,4 @@
-package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system;
+package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums;
 
 public enum PaymentPreference {
     MAIL_CHECK, // Corresponds to "Mail Check"
