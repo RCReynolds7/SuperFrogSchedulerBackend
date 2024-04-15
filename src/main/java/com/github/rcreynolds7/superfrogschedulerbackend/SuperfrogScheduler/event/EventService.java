@@ -38,4 +38,9 @@ public class EventService {
 
         eventRepository.delete(event);
     }
+
+    public Event findById(Integer id) {
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Event", id));
+    }
 }
