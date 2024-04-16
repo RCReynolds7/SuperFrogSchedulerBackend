@@ -1,4 +1,4 @@
-package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.SuperFrogStudent;
+package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system;
 
 public enum RequestStatus {
 

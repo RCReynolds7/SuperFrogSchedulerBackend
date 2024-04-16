@@ -1,5 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spiritDirector;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.Event;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
@@ -10,15 +12,18 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url}/spirit-directors")
 public class SpiritDirectorController {
     private final SuperFrogStudentService superFrogStudentService;
+    private final EventService eventService;
 
-    public SpiritDirectorController(SuperFrogStudentService superFrogStudentService) {
+    public SpiritDirectorController(SuperFrogStudentService superFrogStudentService, EventService eventService) {
         this.superFrogStudentService = superFrogStudentService;
+        this.eventService = eventService;
     }
 
     @PutMapping("superfrog-students/{superFrogStudentId}/deactivate")
@@ -64,5 +69,42 @@ public class SpiritDirectorController {
         SuperFrogStudentDetails student = superFrogStudentService.getDetails(superFrogStudentId);
 
         return new Result(true, StatusCode.SUCCESS, "SuperFrog student details retrieved successfully", student);
+    }
+
+    @PostMapping("/events")
+    public Result createEvent(@RequestBody Event event) {
+        Event createdEvent = eventService.createEvent(event);
+        return new Result(true, StatusCode.SUCCESS, "Event created successfully", createdEvent);
+    }
+
+    @PutMapping("/events/{eventId}")
+    public Result updateEvent(@PathVariable Integer eventId, @RequestBody Event eventDetails) {
+        Event event = eventService.findById(eventId);
+
+        Optional.ofNullable(eventDetails.getTitle())
+                .ifPresent(event::setTitle);
+
+        Optional.ofNullable(eventDetails.getStartDate())
+                .ifPresent(event::setStartDate);
+
+        Optional.ofNullable(eventDetails.getEndDate())
+                .ifPresent(event::setEndDate);
+
+        Optional.ofNullable(eventDetails.getRecurrenceStartDate())
+                .ifPresent(event::setRecurrenceStartDate);
+
+        Optional.ofNullable(eventDetails.getRecurrenceEndDate())
+                .ifPresent(event::setRecurrenceEndDate);
+
+        Event updatedEvent = eventService.updateEvent(eventId, event);
+
+        // Update the entity in the database
+        return new Result(true, StatusCode.SUCCESS, "Event updated successfully", updatedEvent);
+    }
+
+    @DeleteMapping("/events/{eventId}")
+    public Result deleteEvent(@PathVariable Integer eventId) {
+        this.eventService.deleteEvent(eventId);
+        return new Result(true, StatusCode.SUCCESS, "Event deleted successfully");
     }
 }

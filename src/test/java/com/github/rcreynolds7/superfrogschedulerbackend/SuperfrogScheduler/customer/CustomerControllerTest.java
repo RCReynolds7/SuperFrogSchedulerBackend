@@ -135,5 +135,5 @@ public class CustomerControllerTest {
                 .andExpect(jsonPath("$.data.firstName").value(savedAppearanceRequest.getFirstName()));
     }
 
-    }
+}
 
