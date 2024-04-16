@@ -2,14 +2,18 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spir
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.Event;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,14 +22,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -37,10 +43,15 @@ public class SpiritDirectorControllerTest {
     @MockBean
     SuperFrogStudentService superFrogStudentService;
 
+    @MockBean
+    EventService eventService;
+
     @Autowired
     ObjectMapper objectMapper;
 
     List<SuperFrogStudent> superFrogStudents;
+
+    List<Event> events;
 
     @Value("${api.endpoint.base-url}/spirit-directors")
     String baseUrl;
@@ -88,6 +99,25 @@ public class SpiritDirectorControllerTest {
         this.superFrogStudents.add(s2);
         this.superFrogStudents.add(s3);
         this.superFrogStudents.add(s4);
+
+        Event e1 = new Event();
+        e1.setId(1);
+        e1.setTitle("Event 1");
+        e1.setStartDate(LocalDateTime.parse("2022-12-25T10:30:00"));
+        e1.setEndDate(LocalDateTime.parse("2022-12-27T10:50:00"));
+
+        Event e2 = new Event();
+        e2.setId(2);
+        e2.setTitle("Event 2");
+        e2.setStartDate(LocalDateTime.parse("2023-01-03T05:00:00"));
+        e2.setEndDate(LocalDateTime.parse("2023-02-03T06:00:00"));
+        e2.setRecurring(true);
+        e2.setRecurrenceStartDate(LocalDateTime.parse("2023-01-03T05:00:00"));
+        e2.setRecurrenceEndDate(LocalDateTime.parse("2023-02-03T06:00:00"));
+
+        this.events = new ArrayList<>();
+        this.events.add(e1);
+        this.events.add(e2);
     }
 
     @AfterEach()
@@ -213,5 +243,102 @@ public class SpiritDirectorControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("SuperFrog student details retrieved successfully"))
                 .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testCreateEventSuccess() throws Exception {
+        // Given
+        Event newEvent = new Event();
+        newEvent.setTitle("Event 3");
+        newEvent.setStartDate(LocalDateTime.parse("2023-03-25T10:30:00"));
+        newEvent.setEndDate(LocalDateTime.parse("2023-03-27T10:50:00"));
+
+        given(this.eventService.createEvent(Mockito.any(Event.class))).willReturn(newEvent);
+
+        // When & Then
+        this.mockMvc.perform(post(baseUrl + "/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(newEvent)))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Event created successfully"))
+                .andExpect(jsonPath("$.data.title").value("Event 3"));
+    }
+
+    @Test
+    void testUpdateEventSuccess() throws Exception {
+        // Given
+        Event existingEvent = new Event();
+        existingEvent.setId(1);
+        existingEvent.setTitle("Event 1");
+        existingEvent.setStartDate(LocalDateTime.parse("2022-12-25T10:30:00"));
+        existingEvent.setEndDate(LocalDateTime.parse("2022-12-27T10:50:00"));
+
+        Event updatedEvent = new Event();
+        updatedEvent.setId(1);
+        updatedEvent.setTitle("Updated Title");
+        updatedEvent.setStartDate(LocalDateTime.parse("2022-12-25T10:30:00"));
+        updatedEvent.setEndDate(LocalDateTime.parse("2022-12-27T11:40:00"));
+
+        given(this.eventService.findById(1)).willReturn(existingEvent);
+        given(this.eventService.updateEvent(1, existingEvent)).willReturn(updatedEvent);
+
+        // When & Then
+        this.mockMvc.perform(put(baseUrl + "/events/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(existingEvent)))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Event updated successfully"))
+                .andExpect(jsonPath("$.data.title").value("Updated Title"))
+                .andExpect(jsonPath("$.data.startDate").value("2022-12-25 10:30:00"))
+                .andExpect(jsonPath("$.data.endDate").value("2022-12-27 11:40:00"));
+    }
+
+//    @Test
+//    void testUpdateEventWithNonExistentId() throws Exception {
+//        // Given
+//        Event existingEvent = new Event();
+//        existingEvent.setId(5);
+//        existingEvent.setTitle("Event 5");
+//        existingEvent.setStartDate(LocalDateTime.parse("2022-12-25T10:30:00"));
+//        existingEvent.setEndDate(LocalDateTime.parse("2022-12-27T10:50:00"));
+//
+//        given(this.eventService.updateEvent(eq(5), Mockito.any(Event.class))).willThrow(new ObjectNotFoundException("event", 5));
+//
+//        // When & Then
+//        this.mockMvc.perform(put(baseUrl + "/events/5")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(existingEvent))
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.flag").value(false))
+//                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+//                .andExpect(jsonPath("$.message").value("Could not find Event with ID 5 :("));
+//    }
+
+    @Test
+    void testDeleteEventSuccess() throws Exception {
+        // Given
+        doNothing().when(this.eventService).deleteEvent(1);
+
+        // When & Then
+        this.mockMvc.perform(delete(baseUrl + "/events/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Event deleted successfully"));
+    }
+
+    @Test
+    void testDeleteEventWithNonExistentId() throws Exception {
+        // Given
+        doThrow(new ObjectNotFoundException("Event", 5)).when(this.eventService).deleteEvent(5);
+
+        // When & Then
+        this.mockMvc.perform(delete(baseUrl + "/events/5")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find Event with Id 5 :("));
     }
 }
