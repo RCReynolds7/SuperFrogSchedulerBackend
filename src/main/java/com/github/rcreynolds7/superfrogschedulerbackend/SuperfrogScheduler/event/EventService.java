@@ -33,10 +33,9 @@ public class EventService {
     }
 
     public void deleteEvent(Integer id) {
-        Event event = eventRepository.findById(id)
-                                    .orElseThrow(() -> new ObjectNotFoundException("event", id));
-
-        eventRepository.delete(event);
+        this.eventRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("event", id));
+        this.eventRepository.deleteById(id);
     }
 
     public Event findById(Integer id) {
