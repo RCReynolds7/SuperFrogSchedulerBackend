@@ -72,16 +72,16 @@ public class SpiritDirectorController {
     }
 
     @PostMapping("/events")
-    public Event createEvent(@RequestBody Event event) {
-        return eventService.createEvent(event);
+    public Result createEvent(@RequestBody Event event) {
+        Event createdEvent = eventService.createEvent(event);
+        return new Result(true, StatusCode.SUCCESS, "Event created successfully", createdEvent);
     }
 
     @PutMapping("/events/{eventId}")
-    public Event updateEvent(@PathVariable Integer eventId, @RequestBody Event eventDetails) {
+    public Result updateEvent(@PathVariable Integer eventId, @RequestBody Event eventDetails) {
         Event event = eventService.findById(eventId);
 
         Optional.ofNullable(eventDetails.getTitle())
-                .filter(title -> !title.isEmpty())
                 .ifPresent(event::setTitle);
 
         Optional.ofNullable(eventDetails.getStartDate())
@@ -96,12 +96,15 @@ public class SpiritDirectorController {
         Optional.ofNullable(eventDetails.getRecurrenceEndDate())
                 .ifPresent(event::setRecurrenceEndDate);
 
+        Event updatedEvent = eventService.updateEvent(eventId, event);
+
         // Update the entity in the database
-        return eventService.updateEvent(eventId, event);
+        return new Result(true, StatusCode.SUCCESS, "Event updated successfully", updatedEvent);
     }
 
     @DeleteMapping("/events/{eventId}")
-    public void deleteEvent(@PathVariable Integer eventId) {
-        eventService.deleteEvent(eventId);
+    public Result deleteEvent(@PathVariable Integer eventId) {
+        this.eventService.deleteEvent(eventId);
+        return new Result(true, StatusCode.SUCCESS, "Event deleted successfully");
     }
 }
