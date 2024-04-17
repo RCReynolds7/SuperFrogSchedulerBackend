@@ -59,7 +59,7 @@ public class SpiritDirectorController {
         List<SuperFrogStudent> students = superFrogStudentService.searchStudents(firstName, lastName, email, phone);
         List<SuperFrogStudentDto> resultDtos = students.stream()
                 .map(student -> new SuperFrogStudentDto(
-                        student.getId().toString(),
+                        student.getId(),
                         student.getFirstName(),
                         student.getLastName(),
                         student.getEmail(),
