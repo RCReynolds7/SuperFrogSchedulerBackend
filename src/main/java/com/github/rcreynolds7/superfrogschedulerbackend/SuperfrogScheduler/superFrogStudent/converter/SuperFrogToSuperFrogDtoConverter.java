@@ -1,9 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.converter;
-import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
-import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +23,4 @@ public class SuperFrogToSuperFrogDtoConverter  implements Converter<SuperFrogStu
                 source.getAddress(),
                 source.getActive());
     }
-}
-
 }
