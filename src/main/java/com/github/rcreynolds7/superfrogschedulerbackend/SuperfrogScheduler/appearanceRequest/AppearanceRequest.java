@@ -192,6 +192,14 @@ public class AppearanceRequest {
     public void setAssignedSuperFrogStudent(SuperFrogStudent assignedSuperFrogStudent) {
         this.assignedSuperFrogStudent = assignedSuperFrogStudent;
     }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 }
 
 

@@ -2,6 +2,8 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appe
 
 import jakarta.validation.constraints.NotEmpty;
 
+import java.time.LocalDateTime;
+
 public record AppearanceRequestDto (int requestId,
                                     @NotEmpty(message = "firstname is required.")  String firstName,
                                     @NotEmpty(message = "lastname is required.") String lastName,
@@ -14,6 +16,11 @@ public record AppearanceRequestDto (int requestId,
                                     @NotEmpty(message = "special instructions are required.") String specialInstructions,
                                     @NotEmpty(message = "expenses or benefits are required.") String expensesOrBenefits,
                                     @NotEmpty(message = "other organizations involved are required.") String otherOrganizationsInvolved,
-                                    @NotEmpty(message = "detailed event descripiton required.") String detailedEventDescription
-) {
+                                    @NotEmpty(message = "detailed event descripiton required.") String detailedEventDescription,
+                                    @NotEmpty(message = "appearenceRequestStatus required.") String appearanceRequestStatus,
+                                    @NotEmpty(message = "Date time required.")LocalDateTime date
+
+
+
+                                    ) {
 }

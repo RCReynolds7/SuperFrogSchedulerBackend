@@ -14,7 +14,7 @@ public class SuperFrogToSuperFrogDtoConverter  implements Converter<SuperFrogStu
 
     @Override
     public SuperFrogStudentDto convert(SuperFrogStudent source) {
-        return new SuperFrogStudentDto(
+        SuperFrogStudentDto superFrogStudentDto = new SuperFrogStudentDto(
                 source.getId(),
                 source.getFirstName(),
                 source.getLastName(),
@@ -22,5 +22,7 @@ public class SuperFrogToSuperFrogDtoConverter  implements Converter<SuperFrogStu
                 source.getPhone(),
                 source.getAddress(),
                 source.getActive());
+
+        return superFrogStudentDto;
     }
 }
