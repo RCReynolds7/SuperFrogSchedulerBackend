@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class SuperFrogToSuperFrogDtoConverter  implements Converter<SuperFrogStudent, SuperFrogStudentDto> {
-
-    public SuperFrogToSuperFrogDtoConverter() {
-    }
+public class SuperFrogStudentToSuperFrogStudentDtoConverter  implements Converter<SuperFrogStudent, SuperFrogStudentDto> {
 
     @Override
     public SuperFrogStudentDto convert(SuperFrogStudent source) {

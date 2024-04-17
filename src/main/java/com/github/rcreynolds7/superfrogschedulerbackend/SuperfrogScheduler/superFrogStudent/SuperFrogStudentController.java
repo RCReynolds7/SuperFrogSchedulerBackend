@@ -1,5 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.converter.SuperFrogStudentDtoToSuperFrogStudentConverter;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.converter.SuperFrogStudentToSuperFrogStudentDtoConverter;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +13,13 @@ import java.util.Optional;
 @RequestMapping("${api.endpoint.base-url}/superfrog-students")
 public class SuperFrogStudentController {
     private final SuperFrogStudentService superFrogStudentService;
+    private final SuperFrogStudentToSuperFrogStudentDtoConverter superFrogStudentToSuperFrogStudentDtoConverter;
+    private final SuperFrogStudentDtoToSuperFrogStudentConverter superfrogDtoToSuperfrogConverter;
 
-    public SuperFrogStudentController(SuperFrogStudentService superFrogStudentService) {
+    public SuperFrogStudentController(SuperFrogStudentService superFrogStudentService, SuperFrogStudentToSuperFrogStudentDtoConverter superFrogStudentToSuperFrogStudentDtoConverter, SuperFrogStudentDtoToSuperFrogStudentConverter superfrogDtoToSuperfrogConverter) {
         this.superFrogStudentService = superFrogStudentService;
+        this.superFrogStudentToSuperFrogStudentDtoConverter = superFrogStudentToSuperFrogStudentDtoConverter;
+        this.superfrogDtoToSuperfrogConverter = superfrogDtoToSuperfrogConverter;
     }
 
     @PutMapping("/{superFrogStudentId}")
