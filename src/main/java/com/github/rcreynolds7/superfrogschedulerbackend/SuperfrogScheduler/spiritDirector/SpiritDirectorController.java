@@ -1,7 +1,11 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spiritDirector;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.Event;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumRequestDto;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumResponseDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
@@ -11,6 +15,7 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.syste
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,10 +25,12 @@ import java.util.stream.Collectors;
 public class SpiritDirectorController {
     private final SuperFrogStudentService superFrogStudentService;
     private final EventService eventService;
+    private final AppearanceRequestService appearanceRequestService;
 
-    public SpiritDirectorController(SuperFrogStudentService superFrogStudentService, EventService eventService) {
+    public SpiritDirectorController(SuperFrogStudentService superFrogStudentService, EventService eventService, AppearanceRequestService appearanceRequestService) {
         this.superFrogStudentService = superFrogStudentService;
         this.eventService = eventService;
+        this.appearanceRequestService = appearanceRequestService;
     }
 
     @PutMapping("superfrog-students/{superFrogStudentId}/deactivate")
@@ -106,5 +113,34 @@ public class SpiritDirectorController {
     public Result deleteEvent(@PathVariable Integer eventId) {
         this.eventService.deleteEvent(eventId);
         return new Result(true, StatusCode.SUCCESS, "Event deleted successfully");
+    }
+
+    @PostMapping("/create-honorarium/{superFrogStudentId}")
+    public Result createHonorarium(@PathVariable Integer superFrogStudentId, @RequestBody HonorariumRequestDto honorariumRequest) {
+        LocalDateTime startDate = honorariumRequest.startDate();
+        LocalDateTime endDate = honorariumRequest.endDate();
+
+        SuperFrogStudent superFrogStudent = superFrogStudentService.findById(superFrogStudentId);
+        List<AppearanceRequest> completedRequests = appearanceRequestService.findCompletedBySuperFrogStudentIdAndDateRange(superFrogStudent, startDate, endDate);
+
+        if (completedRequests.isEmpty()) {
+            return new Result(false, StatusCode.NOT_FOUND, "No completed appearance requests found for this SuperFrog Student.");
+        }
+
+        appearanceRequestService.updateStatusToSubmittedToPayroll(completedRequests);
+
+        // Calculate the amount
+        int amount = completedRequests.size() * 10;
+
+        // Create the response DTO
+        HonorariumResponseDto responseDto = new HonorariumResponseDto(
+                superFrogStudent.getId(),
+                superFrogStudent.getPaymentPreference(),
+                superFrogStudent.getInternational(),
+                superFrogStudent.getAddress(),
+                amount
+        );
+
+        return new Result(true, StatusCode.SUCCESS, "Honorarium requests created and submitted to payroll successfully.", responseDto);
     }
 }

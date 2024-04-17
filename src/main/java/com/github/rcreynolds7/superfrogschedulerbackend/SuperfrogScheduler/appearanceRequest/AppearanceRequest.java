@@ -1,11 +1,14 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -58,6 +61,9 @@ public class AppearanceRequest {
 
     @ManyToOne
     private SuperFrogStudent assignedSuperFrogStudent;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime date = LocalDateTime.now();
 
     // Construct
 

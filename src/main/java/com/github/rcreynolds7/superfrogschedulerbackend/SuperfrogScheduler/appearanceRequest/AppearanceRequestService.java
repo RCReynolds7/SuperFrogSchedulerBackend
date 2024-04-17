@@ -1,9 +1,12 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,5 +30,20 @@ public class AppearanceRequestService {
 
     public AppearanceRequest save(AppearanceRequest newAppearanceRequest) {
         return this.appearanceRequestRepository.save(newAppearanceRequest);
+    }
+
+    public List<AppearanceRequest> findCompletedBySuperFrogStudentIdAndDateRange(SuperFrogStudent superFrogStudent, LocalDateTime startDate, LocalDateTime endDate) {
+        return appearanceRequestRepository.findByAssignedSuperFrogStudentAndAppearanceRequestStatusInAndDateBetween(
+                superFrogStudent,
+                List.of(AppearanceRequestStatus.COMPLETED),
+                startDate,
+                endDate
+        );
+    }
+
+    public void updateStatusToSubmittedToPayroll(List<AppearanceRequest> requests) {
+        requests.forEach(request -> {
+            request.setAppearanceRequestStatus(AppearanceRequestStatus.SUBMITTED_TO_PAYROLL);
+        });
     }
 }

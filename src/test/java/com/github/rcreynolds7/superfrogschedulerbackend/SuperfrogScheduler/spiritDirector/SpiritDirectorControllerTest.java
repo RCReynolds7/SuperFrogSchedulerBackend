@@ -2,13 +2,17 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spir
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.Event;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumRequestDto;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumResponseDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.PaymentPreference;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +49,9 @@ public class SpiritDirectorControllerTest {
 
     @MockBean
     EventService eventService;
+
+    @MockBean
+    AppearanceRequestService appearanceRequestService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -295,27 +302,6 @@ public class SpiritDirectorControllerTest {
                 .andExpect(jsonPath("$.data.endDate").value("2022-12-27 11:40:00"));
     }
 
-//    @Test
-//    void testUpdateEventWithNonExistentId() throws Exception {
-//        // Given
-//        Event existingEvent = new Event();
-//        existingEvent.setId(5);
-//        existingEvent.setTitle("Event 5");
-//        existingEvent.setStartDate(LocalDateTime.parse("2022-12-25T10:30:00"));
-//        existingEvent.setEndDate(LocalDateTime.parse("2022-12-27T10:50:00"));
-//
-//        given(this.eventService.updateEvent(eq(5), Mockito.any(Event.class))).willThrow(new ObjectNotFoundException("event", 5));
-//
-//        // When & Then
-//        this.mockMvc.perform(put(baseUrl + "/events/5")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(existingEvent))
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.flag").value(false))
-//                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-//                .andExpect(jsonPath("$.message").value("Could not find Event with ID 5 :("));
-//    }
-
     @Test
     void testDeleteEventSuccess() throws Exception {
         // Given
@@ -340,5 +326,69 @@ public class SpiritDirectorControllerTest {
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find Event with Id 5 :("));
+    }
+
+    @Test
+    void testCreateHonorariumSuccess() throws Exception {
+        // Given
+        Integer superFrogStudentId = 1;
+        LocalDateTime startDate = LocalDateTime.of(2023, 4, 15, 10, 0);
+        LocalDateTime endDate = LocalDateTime.of(2023, 4, 20, 10, 0);
+        HonorariumRequestDto honorariumRequest = new HonorariumRequestDto(superFrogStudentId,startDate, endDate);
+        SuperFrogStudent student = new SuperFrogStudent();
+        student.setId(superFrogStudentId);
+        student.setPaymentPreference(PaymentPreference.MAIL_CHECK);
+        student.setInternational(false);
+        student.setAddress("123 Main St");
+
+        AppearanceRequest completedRequest = new AppearanceRequest();
+        completedRequest.setAppearanceRequestStatus(AppearanceRequestStatus.COMPLETED);
+        List<AppearanceRequest> completedRequests = List.of(completedRequest);
+
+        HonorariumResponseDto responseDto = new HonorariumResponseDto(
+                superFrogStudentId,
+                student.getPaymentPreference(),
+                student.getInternational(),
+                student.getAddress(),
+                10 // Assuming one completed request and $10 per request
+        );
+
+        given(superFrogStudentService.findById(superFrogStudentId)).willReturn(student);
+        given(appearanceRequestService.findCompletedBySuperFrogStudentIdAndDateRange(student, startDate, endDate))
+                .willReturn(completedRequests);
+        doNothing().when(appearanceRequestService).updateStatusToSubmittedToPayroll(completedRequests);
+
+        // When & Then
+        mockMvc.perform(post(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(honorariumRequest)))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Honorarium requests created and submitted to payroll successfully."))
+                .andExpect(jsonPath("$.data.superFrogStudentId").value(superFrogStudentId))
+                .andExpect(jsonPath("$.data.amount").value(10));
+    }
+
+    @Test
+    void testCreateHonorariumNoCompletedRequests() throws Exception {
+        // Given
+        Integer superFrogStudentId = 1;
+        LocalDateTime startDate = LocalDateTime.of(2023, 4, 15, 10, 0);
+        LocalDateTime endDate = LocalDateTime.of(2023, 4, 20, 10, 0);
+        HonorariumRequestDto honorariumRequest = new HonorariumRequestDto(superFrogStudentId, startDate, endDate);
+        SuperFrogStudent student = new SuperFrogStudent();
+        student.setId(superFrogStudentId);
+
+        given(superFrogStudentService.findById(superFrogStudentId)).willReturn(student);
+        given(appearanceRequestService.findCompletedBySuperFrogStudentIdAndDateRange(student, startDate, endDate))
+                .willReturn(new ArrayList<>());
+
+        // When & Then
+        mockMvc.perform(post(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(honorariumRequest)))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("No completed appearance requests found for this SuperFrog Student."));
     }
 }
