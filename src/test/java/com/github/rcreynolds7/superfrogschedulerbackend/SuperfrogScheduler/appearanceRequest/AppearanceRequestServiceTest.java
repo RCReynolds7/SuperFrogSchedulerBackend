@@ -1,5 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,5 +75,52 @@ public class AppearanceRequestServiceTest {
         assertThat(savedRequest.getDetailedEventDescription()).isEqualTo("blah blah");
 
         verify(appearanceRequestRepository, times(1)).save(newRequest);
+    }
+
+    @Test
+    void testFindCompletedBySuperFrogStudentIdAndDateRange() {
+        // Given
+        SuperFrogStudent superFrogStudent = new SuperFrogStudent(); // Assume necessary attributes are set
+        LocalDateTime startDate = LocalDateTime.of(2023, 4, 1, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2023, 4, 15, 0, 0);
+        List<AppearanceRequest> expectedRequests = List.of(new AppearanceRequest(), new AppearanceRequest()); // Assume these are correctly initialized
+
+        given(appearanceRequestRepository.findByAssignedSuperFrogStudentAndAppearanceRequestStatusInAndDateBetween(
+                superFrogStudent,
+                List.of(AppearanceRequestStatus.COMPLETED),
+                startDate,
+                endDate
+        )).willReturn(expectedRequests);
+
+        // When
+        List<AppearanceRequest> actualRequests = appearanceRequestService.findCompletedBySuperFrogStudentIdAndDateRange(superFrogStudent, startDate, endDate);
+
+        // Then
+        assertThat(actualRequests).isEqualTo(expectedRequests);
+        verify(appearanceRequestRepository, times(1)).findByAssignedSuperFrogStudentAndAppearanceRequestStatusInAndDateBetween(
+                superFrogStudent,
+                List.of(AppearanceRequestStatus.COMPLETED),
+                startDate,
+                endDate
+        );
+    }
+
+    @Test
+    void testUpdateStatusToSubmittedToPayroll() {
+        // Given
+        AppearanceRequest request1 = new AppearanceRequest();
+        request1.setAppearanceRequestStatus(AppearanceRequestStatus.COMPLETED);
+
+        AppearanceRequest request2 = new AppearanceRequest();
+        request2.setAppearanceRequestStatus(AppearanceRequestStatus.COMPLETED);
+
+        List<AppearanceRequest> requests = List.of(request1, request2);
+
+        // When
+        appearanceRequestService.updateStatusToSubmittedToPayroll(requests);
+
+        // Then
+        assertThat(request1.getAppearanceRequestStatus()).isEqualTo(AppearanceRequestStatus.SUBMITTED_TO_PAYROLL);
+        assertThat(request2.getAppearanceRequestStatus()).isEqualTo(AppearanceRequestStatus.SUBMITTED_TO_PAYROLL);
     }
 }
