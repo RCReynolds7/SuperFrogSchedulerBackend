@@ -5,7 +5,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SuperfrogDtoToSuperfrogConverter implements Converter<SuperFrogStudentDto, SuperFrogStudent>{
+public class SuperFrogStudentDtoToSuperFrogStudentConverter implements Converter<SuperFrogStudentDto, SuperFrogStudent>{
     @Override
     public SuperFrogStudent convert(SuperFrogStudentDto source) {
         SuperFrogStudent superFrogStudent = new SuperFrogStudent();
