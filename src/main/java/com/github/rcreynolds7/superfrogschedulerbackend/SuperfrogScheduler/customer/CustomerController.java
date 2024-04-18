@@ -38,7 +38,7 @@ public class CustomerController {
         return new Result(true, StatusCode.SUCCESS, "SuperFrog appearance request created successfully.", savedAppearanceRequest);
     }
 
-    @PutMapping("/appearance-requests/{appearanceRequestId}")
+    @PutMapping("/appearance-requests/{requestId}")
     public Result updateAppearanceRequest(@PathVariable Integer appearanceRequestId, @RequestBody AppearanceRequest appearanceRequestUpdate) {
         AppearanceRequest appearanceRequest = appearanceRequestService.findById(appearanceRequestId);
 

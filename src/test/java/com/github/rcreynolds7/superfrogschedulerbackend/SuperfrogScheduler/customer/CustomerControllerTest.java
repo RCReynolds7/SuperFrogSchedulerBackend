@@ -1,6 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.customer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.dto.AppearanceRequestDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
+
+
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -28,10 +32,14 @@ public class CustomerControllerTest {
     @MockBean
     CustomerService CustomerService;
 
+    @MockBean
+    AppearanceRequestService appearanceRequestService;
+
     @Autowired
     ObjectMapper objectMapper;
 
     List<Customer> customers;
+
 
     @Value("${api.endpoint.base-url}/customer")
     String baseUrl;
@@ -78,7 +86,7 @@ public class CustomerControllerTest {
     @Test
     void testPostAppearanceRequestSuccess() throws Exception {
         // Given
-        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "Lee", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah");
+        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "Lee", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah", "Pending");
         String json = this.objectMapper.writeValueAsString(appearanceRequestDto);
 
         AppearanceRequest savedAppearanceRequest = new AppearanceRequest();
@@ -109,7 +117,7 @@ public class CustomerControllerTest {
     @Test
     void testPostAppearanceRequestErrorWithEmptyField() throws Exception {
         // Given
-        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah");
+        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah", "Pending");
         String json = this.objectMapper.writeValueAsString(appearanceRequestDto);
 
         AppearanceRequest savedAppearanceRequest = new AppearanceRequest();
@@ -135,5 +143,7 @@ public class CustomerControllerTest {
                 .andExpect(jsonPath("$.data.firstName").value(savedAppearanceRequest.getFirstName()));
     }
 
-}
+    }
+
+
 
