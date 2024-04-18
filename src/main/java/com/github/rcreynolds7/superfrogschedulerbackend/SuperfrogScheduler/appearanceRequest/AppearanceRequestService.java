@@ -14,6 +14,8 @@ import java.util.List;
 public class AppearanceRequestService {
     private final AppearanceRequestRepository appearanceRequestRepository;
 
+    public AppearanceRequest createAppearanceRequest(AppearanceRequest request) { return this.appearanceRequestRepository.save(request);}
+
     public AppearanceRequestService(AppearanceRequestRepository appearanceRequestRepository) {
         this.appearanceRequestRepository = appearanceRequestRepository;
     }
@@ -74,5 +76,36 @@ public class AppearanceRequestService {
         this.appearanceRequestRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", id));
     }
+
+public AppearanceRequestDetails getDetails(Integer requestId) {
+        AppearanceRequest request = findById(requestId);
+
+        List<AppearanceRequest> signedUpAppearances = appearanceRequestRepository.findByAssignedAppearanceRequestStatusIn(request, List.of(
+                AppearanceRequestStatus.PENDING,
+                AppearanceRequestStatus.APPROVED,
+                AppearanceRequestStatus.ASSIGNED
+        ));
+
+        List<AppearanceRequest> completedAppearances = appearanceRequestRepository.findByAssignedAppearanceRequestStatusIn(request, List.of(AppearanceRequestStatus.COMPLETED));
+
+        return new AppearanceRequestDetails(
+                request.getFirstName(),
+                request.getLastName(),
+                request.getEmail(),
+                request.getPhone(),
+                request.getTypeOfEvent(),
+                request.getEventTitle(),
+                request.getNameOfOrg(),
+                request.getEventAddress(),
+                request.getIsOnCampus(),
+                request.getSpecialInstructions(),
+                request.getExpensesOrBenefits(),
+                request.getOtherOrganizationsInvolved(),
+                request.getDetailedEventDescription(),
+                signedUpAppearances,
+                completedAppearances
+
+        );
+}
 
 }
