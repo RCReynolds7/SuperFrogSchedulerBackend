@@ -2,19 +2,27 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appe
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -30,12 +38,121 @@ public class AppearanceRequestServiceTest {
 
     @BeforeEach
     void setUp() {
+        AppearanceRequest a1 = new AppearanceRequest();
+        a1.setId(1);
+        a1.setFirstName("tom");
+        a1.setLastName("lee");
+        a1.setPhone("(123) 456-7901");
+        a1.setEventAddress("2901 Stadium Dr, Fort Worth, TX 76109");
+        a1.setEmail("tomlee@tcu.edu");
+        a1.setEventTitle("TCU Party");
+        a1.setTypeOfEvent("Party");
+        a1.setDetailedEventDescription("Fun for everyone!");
+        a1.setOtherOrganizationsInvolved("None");
+        a1.setNameOfOrg("TCU PARTY NAME");
+        a1.setIsOnCampus("Yes");
+        a1.setSpecialInstructions("N/A");
+        a1.setExpensesOrBenefits("No answer");
+        a1.setOtherOrganizationsInvolved("No");
+        //a1.setDate();
+
+        AppearanceRequest a2 = new AppearanceRequest();
+        a2.setId(2);
+        a2.setFirstName("Alice");
+        a2.setLastName("Johnson");
+        a2.setPhone("(987) 654-3210");
+        a2.setEventAddress("123 Main Street, Anytown, USA");
+        a2.setEmail("alice.johnson@example.com");
+        a2.setEventTitle("Birthday Bash");
+        a2.setTypeOfEvent("Birthday Party");
+        a2.setDetailedEventDescription("Celebrate Alice's birthday with friends and family!");
+        a2.setOtherOrganizationsInvolved("Local charity");
+        a2.setNameOfOrg("Happy Hearts Charity");
+        a2.setIsOnCampus("No");
+        a2.setSpecialInstructions("Please bring a gift for donation.");
+        a2.setExpensesOrBenefits("Free snacks and drinks provided.");
+        a2.setOtherOrganizationsInvolved("Yes, XYZ Club");
+
+        AppearanceRequest a3 = new AppearanceRequest();
+        a3.setId(3);
+        a3.setFirstName("Emily");
+        a3.setLastName("Smith");
+        a3.setPhone("(555) 123-4567");
+        a3.setEventAddress("456 Oak Street, Springfield, USA");
+        a3.setEmail("emily.smith@example.com");
+        a3.setEventTitle("Family Picnic");
+        a3.setTypeOfEvent("Picnic");
+        a3.setDetailedEventDescription("Enjoy a day of fun and food with the family!");
+        a3.setOtherOrganizationsInvolved("Local park association");
+        a3.setNameOfOrg("Springfield Park Association");
+        a3.setIsOnCampus("No");
+        a3.setSpecialInstructions("Bring your own picnic blanket and games.");
+        a3.setExpensesOrBenefits("Prizes for game winners.");
+        a3.setOtherOrganizationsInvolved("No additional organizations involved.");
+
+        AppearanceRequest a4 = new AppearanceRequest();
+        a4.setId(4);
+        a4.setFirstName("Michael");
+        a4.setLastName("Johnson");
+        a4.setPhone("(555) 555-5555");
+        a4.setEventAddress("789 Maple Avenue, Cityville, USA");
+        a4.setEmail("michael.johnson@example.com");
+        a4.setEventTitle("Community BBQ");
+        a4.setTypeOfEvent("Community Event");
+        a4.setDetailedEventDescription("Join us for a community BBQ with music and games!");
+        a4.setOtherOrganizationsInvolved("Local charity coalition");
+        a4.setNameOfOrg("Cityville Community Foundation");
+        a4.setIsOnCampus("No");
+        a4.setSpecialInstructions("Please RSVP for catering purposes.");
+        a4.setExpensesOrBenefits("Free BBQ meal for attendees.");
+        a4.setOtherOrganizationsInvolved("Cityville Rotary Club");
+
+        this.appearanceRequests = new ArrayList<>();
+        this.appearanceRequests.add(a1);
+        this.appearanceRequests.add(a2);
+        this.appearanceRequests.add(a3);
+        this.appearanceRequests.add(a4);
 
     }
 
     @AfterEach
     void tearDown() {
 
+    }
+
+    @Test
+
+    void testFindByIdSuccess() {
+        //Given
+        AppearanceRequest expectedRequest = appearanceRequests.get(0);
+        given(appearanceRequestRepository.findById(expectedRequest.getId())).willReturn(Optional.of(expectedRequest));
+
+        //When
+
+        AppearanceRequest actualRequest = appearanceRequestService.findById(expectedRequest.getId());
+
+        //Then
+
+        assertThat(actualRequest).isEqualTo(expectedRequest);
+        verify(appearanceRequestRepository, times(1)).findById(expectedRequest.getId());
+
+    }
+
+    @Test
+    void testFindByIdNotFound() {
+        //Given
+        Integer nonExistentId = 99;
+        given(appearanceRequestRepository.findById(nonExistentId)).willReturn(Optional.empty());
+
+        //When
+
+        Throwable thrown = catchThrowable(() -> {
+            appearanceRequestService.findById(nonExistentId);
+        });
+
+        //Then
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class);
+        verify(appearanceRequestRepository, times(1)).findById(nonExistentId);
     }
 
     @Test
@@ -122,5 +239,110 @@ public class AppearanceRequestServiceTest {
         // Then
         assertThat(request1.getAppearanceRequestStatus()).isEqualTo(AppearanceRequestStatus.SUBMITTED_TO_PAYROLL);
         assertThat(request2.getAppearanceRequestStatus()).isEqualTo(AppearanceRequestStatus.SUBMITTED_TO_PAYROLL);
+    }
+
+    @Test
+
+    void testUpdateSuccess() {
+
+        //Given
+
+        AppearanceRequest existingAppearance = appearanceRequests.get(0);
+        AppearanceRequest updatedInfo = new AppearanceRequest();
+        updatedInfo.setFirstName("UpdatedFirstName");
+        updatedInfo.setLastName("UpdatedLastName");
+
+        given(appearanceRequestRepository.findById(1)).willReturn(Optional.of(existingAppearance));
+        given(appearanceRequestRepository.save(existingAppearance)).willReturn(existingAppearance);
+
+        //When
+
+        AppearanceRequest updatedAppearance = appearanceRequestService.update(1, updatedInfo);
+
+        //Then
+
+        assertThat(updatedAppearance.getFirstName()).isEqualTo("UpdatedFirstName");
+        assertThat(updatedAppearance.getLastName()).isEqualTo("UpdatedLastName");
+        verify(appearanceRequestRepository, times(1)).save(existingAppearance);
+        verify(appearanceRequestRepository, times(1)).save(existingAppearance);
+
+    }
+
+    @Test
+    void testUpdateSuccess2() {
+        //given
+
+        AppearanceRequest existingAppearance = appearanceRequests.get(2);
+        AppearanceRequest updatedInfo = new AppearanceRequest();
+        updatedInfo.setFirstName("UpdatedFirstName");
+        updatedInfo.setLastName("UpdatedLastName");
+        updatedInfo.setEmail("updatedEmail@tcu.edu");
+        updatedInfo.setPhone("999-999-9999");
+        updatedInfo.setEventAddress("999 Updated Address Dr");
+        updatedInfo.setExpensesOrBenefits("Yes");
+        updatedInfo.setSpecialInstructions("Need Mics");
+        updatedInfo.setNameOfOrg("Blueberries");
+        updatedInfo.setIsOnCampus("Yes");
+        updatedInfo.setOtherOrganizationsInvolved("No");
+        updatedInfo.setTypeOfEvent("Cool");
+        updatedInfo.setEventTitle("Pool Party");
+        updatedInfo.setDetailedEventDescription("Haha");
+
+        given(appearanceRequestRepository.findById(2)).willReturn(Optional.of(existingAppearance));
+        given(appearanceRequestRepository.save(existingAppearance)).willReturn(existingAppearance);
+
+        //When
+
+        AppearanceRequest updatedAppearance = appearanceRequestService.update(2, updatedInfo);
+
+        //Then
+        assertThat(updatedAppearance.getFirstName()).isEqualTo("UpdatedFirstName");
+        assertThat(updatedAppearance.getLastName()).isEqualTo("UpdatedLastName");
+        assertThat(updatedAppearance.getEmail()).isEqualTo("updatedEmail@tcu.edu");
+        assertThat(updatedAppearance.getPhone()).isEqualTo("999-999-9999");
+        assertThat(updatedAppearance.getEventAddress()).isEqualTo("999 Updated Address Dr");
+        assertThat(updatedAppearance.getDetailedEventDescription()).isEqualTo("Haha");
+        assertThat(updatedAppearance.getOtherOrganizationsInvolved()).isEqualTo("No");
+        assertThat(updatedAppearance.getExpensesOrBenefits()).isEqualTo("Yes");
+        assertThat(updatedAppearance.getSpecialInstructions()).isEqualTo("Need Mics");
+        assertThat(updatedAppearance.getIsOnCampus()).isEqualTo("Yes");
+        assertThat(updatedAppearance.getEventTitle()).isEqualTo("Pool Party");
+        assertThat(updatedAppearance.getNameOfOrg()).isEqualTo("Blueberries");
+        assertThat(updatedAppearance.getTypeOfEvent()).isEqualTo("Cool");
+
+        verify(appearanceRequestRepository, times(1)).findById(2);
+        verify(appearanceRequestRepository, times(1)).save(any(AppearanceRequest.class));
+    }
+
+    @Test
+    void testUpdateNotFound() {
+        //Given
+        AppearanceRequest updatedInfo = new AppearanceRequest();
+        updatedInfo.setFirstName("Nonexistent");
+        given(appearanceRequestRepository.findById(anyInt())).willReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(ObjectNotFoundException.class, () -> appearanceRequestService.update(99, updatedInfo));
+        verify(appearanceRequestRepository, times(1)).findById(99);
+
+    }
+
+    @Test
+    void testUpdateInvalidFormat() {
+        //Given
+        Integer requestId = 1;
+        AppearanceRequest existingAppearance = appearanceRequests.get(0);
+        AppearanceRequest invalidUpdateInfo = new AppearanceRequest();
+        invalidUpdateInfo.setEmail("invalidEmail");
+        invalidUpdateInfo.setPhone("1234567890");
+        invalidUpdateInfo.setEventTitle("Invalid Event Address Format");
+
+        given(appearanceRequestRepository.findById(requestId)).willReturn(Optional.of(existingAppearance));
+
+        willThrow(new IllegalArgumentException("Invalid data format")).given(appearanceRequestRepository).save(any(AppearanceRequest.class));
+
+        assertThrows(IllegalArgumentException.class, () -> appearanceRequestService.update(requestId, invalidUpdateInfo));
+        verify(appearanceRequestRepository, times(1)).findById(requestId);
+        verify(appearanceRequestRepository, times(1)).save(any(AppearanceRequest.class));
     }
 }

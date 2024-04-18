@@ -49,7 +49,7 @@ public class AppearanceRequestService {
         });
     }
 
-    public AppearanceRequest updateAppearanceRequest(Integer requestId, AppearanceRequest update) {
+    public AppearanceRequest update(Integer requestId, AppearanceRequest update) {
         AppearanceRequest appearanceRequest = this.appearanceRequestRepository
                 .findById(requestId)
                 .map(oldAppearanceRequest -> {

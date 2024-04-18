@@ -97,7 +97,7 @@ public class CustomerController {
                 .filter(detailedEventDescription -> !detailedEventDescription.isEmpty())
                 .ifPresent(appearanceRequest::setDetailedEventDescription);
 
-        appearanceRequestService.updateAppearanceRequest(appearanceRequestId, appearanceRequest);
+        appearanceRequestService.update(appearanceRequestId, appearanceRequest);
 
         return new Result(true, StatusCode.SUCCESS, "Appearance request information updated successfully");
     }
