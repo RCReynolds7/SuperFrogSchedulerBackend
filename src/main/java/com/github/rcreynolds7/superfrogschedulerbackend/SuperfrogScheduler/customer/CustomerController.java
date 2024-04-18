@@ -23,6 +23,13 @@ public class CustomerController {
         this.appearanceRequestRepository = appearanceRequestRepository;
     }
 
+   // @GetMapping("appearance-request/{requestId}/details")
+  //  public Result getAppearanceRequestDetails(@PathVariable Integer appearanceRequestId) {
+     //   AppearanceRequestDetails request = appearanceRequestService.getDetails(appearanceRequestId);
+  //
+ //       return new Result(true, StatusCode.SUCCESS, "Appearance request details retrieved successfully", request)
+  //  }
+
     @PostMapping("/request-superfrog-appearance")
     public Result requestSuperFrogAppearance(@RequestBody AppearanceRequest appearanceRequest) {
         // Create appearance request service in the database
@@ -93,6 +100,12 @@ public class CustomerController {
         appearanceRequestService.updateAppearanceRequest(appearanceRequestId, appearanceRequest);
 
         return new Result(true, StatusCode.SUCCESS, "Appearance request information updated successfully");
+    }
+
+    @DeleteMapping("/appearance-requests/{requestId}")
+    public Result deleteAppearanceRequest(@PathVariable Integer requestId) {
+        this.appearanceRequestService.deleteAppearanceRequest(requestId);
+        return new Result(true, StatusCode.SUCCESS, "Appearance Request deleted successfully.");
     }
 }
 

@@ -68,7 +68,7 @@ public class AppearanceRequestService {
                     return oldAppearanceRequest;
                 })
                 .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", id));
-        return appearanceRequest.save(appearanceRequest);
+        return appearanceRequestRepository.save(appearanceRequest);
     }
     public void deleteAppearanceRequest(Integer id) {
         this.appearanceRequestRepository.findById(id)
