@@ -46,4 +46,33 @@ public class AppearanceRequestService {
             request.setAppearanceRequestStatus(AppearanceRequestStatus.SUBMITTED_TO_PAYROLL);
         });
     }
+
+    public AppearanceRequest updateAppearanceRequest(Integer id, AppearanceRequest requestDetails) {
+        AppearanceRequest appearanceRequest = this.appearanceRequestRepository
+                .findById(id)
+                .map(oldAppearanceRequest -> {
+                    oldAppearanceRequest.setFirstName(requestDetails.getFirstName());
+                    oldAppearanceRequest.setLastName(requestDetails.getLastName());
+                    oldAppearanceRequest.setPhone(requestDetails.getPhone());
+                    oldAppearanceRequest.setEmail(requestDetails.getEmail());
+                    oldAppearanceRequest.setDate(requestDetails.getDate());
+                    oldAppearanceRequest.setTypeOfEvent(requestDetails.getTypeOfEvent());
+                    oldAppearanceRequest.setEventTitle(requestDetails.getEventTitle());
+                    oldAppearanceRequest.setNameOfOrg(requestDetails.getNameOfOrg());
+                    oldAppearanceRequest.setEventAddress(requestDetails.getEventAddress());
+                    oldAppearanceRequest.setIsOnCampus(requestDetails.getIsOnCampus());
+                    oldAppearanceRequest.setSpecialInstructions(requestDetails.getSpecialInstructions());
+                    oldAppearanceRequest.setExpensesOrBenefits(requestDetails.getExpensesOrBenefits());
+                    oldAppearanceRequest.setOtherOrganizationsInvolved(requestDetails.getOtherOrganizationsInvolved());
+                    oldAppearanceRequest.setDetailedEventDescription(requestDetails.getDetailedEventDescription());
+                    return oldAppearanceRequest;
+                })
+                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", id));
+        return appearanceRequest.save(appearanceRequest);
+    }
+    public void deleteAppearanceRequest(Integer id) {
+        this.appearanceRequestRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", id));
+    }
+
 }

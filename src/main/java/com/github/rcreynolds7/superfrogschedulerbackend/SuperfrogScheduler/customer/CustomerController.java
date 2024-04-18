@@ -7,6 +7,8 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.syste
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("${api.endpoint.base-url}/customer")
 public class CustomerController {
@@ -31,20 +33,22 @@ public class CustomerController {
     }
 
     @PutMapping("/appearance-requests/{appearanceRequestId}")
+    public Result updateAppearanceRequest(@PathVariable Integer appearanceRequestId, @RequestBody AppearanceRequest appearanceRequestUpdate) {
+        AppearanceRequest appearanceRequest = appearanceRequestService.findById(appearanceRequestId);
 
-    //updateevent on eventservice
+        Optional.ofNullable(appearanceRequestUpdate.getFirstName())
+                .filter( name -> !name.isEmpty())
+                .ifPresent(appearanceRequest::setFirstName);
 
-    public Result updateSuperFrogAppearance(@RequestBody AppearanceRequest appearanceRequest) {
-        Result result = this.appearanceRequestRepository
-                .findById(RequestId)
-                .map(oldAppearenceRequestId -> {
-                oldAppearenceRequestId.setDate(appearanceRequest.getDate());
+        Optional.ofNullable(appearanceRequestUpdate.getLastName())
+                .filter( name -> !name.isEmpty())
+                .ifPresent(appearanceRequest::setLastName);
 
+        Optional.ofNullable(appearanceRequestUpdate.getEmail())
+                .filter( email -> !email.isEmpty())
+                .ifPresent(appearanceRequest::setEmail);
 
-
-                })
-
-
+    }
 
 }
 

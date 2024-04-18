@@ -56,6 +56,9 @@ public class AppearanceRequest {
     @NotEmpty(message = "detailed event descripiton required.")
     private String detailedEventDescription;
 
+    @NotEmpty(message = "name of orgainization required.")
+    private String nameOfOrg;
+
     @Enumerated(EnumType.STRING) // This stores the Enum as a String in the database
     private AppearanceRequestStatus appearanceRequestStatus = AppearanceRequestStatus.PENDING;
 
@@ -145,9 +148,18 @@ public class AppearanceRequest {
         this.isOnCampus = isOnCampus;
     }
 
+    public String getNameOfOrg() {
+        return nameOfOrg;
+    }
+
+    public void setNameOfOrg(String nameOfOrg) {
+        this.nameOfOrg = nameOfOrg;
+    }
+
     public String getSpecialInstructions() {
         return specialInstructions;
     }
+
 
     public void setSpecialInstructions(String specialInstructions) {
         this.specialInstructions = specialInstructions;
@@ -200,6 +212,8 @@ public class AppearanceRequest {
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
+
+
 }
 
 
