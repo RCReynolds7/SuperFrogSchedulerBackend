@@ -2,6 +2,8 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.supe
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestRepository;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReport;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.PaymentPreference;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
@@ -14,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,10 +39,14 @@ public class SuperFrogStudentServiceTest {
     @Mock
     AppearanceRequestRepository appearanceRequestRepository;
 
+    @Mock
+    AppearanceRequestService appearanceRequestService;
+
     @InjectMocks
     SuperFrogStudentService superFrogStudentService;
 
     List<SuperFrogStudent> superFrogStudents;
+    List<AppearanceRequest> appearances;
 
     @BeforeEach
     void setUp() {
@@ -85,6 +92,24 @@ public class SuperFrogStudentServiceTest {
         this.superFrogStudents.add(s3);
         this.superFrogStudents.add(s4);
 
+        AppearanceRequest completed1 = new AppearanceRequest();
+        completed1.setAppearanceRequestStatus(AppearanceRequestStatus.COMPLETED);
+        completed1.setAssignedSuperFrogStudent(s1);
+        AppearanceRequest completed2 = new AppearanceRequest();
+        completed2.setAppearanceRequestStatus(AppearanceRequestStatus.COMPLETED);
+        completed2.setAssignedSuperFrogStudent(s1);
+        AppearanceRequest canceled1 = new AppearanceRequest();
+        canceled1.setAppearanceRequestStatus(AppearanceRequestStatus.CANCELED_BY_THE_SPIRIT_DIRECTOR);
+        canceled1.setAssignedSuperFrogStudent(s1);
+        AppearanceRequest canceled2 = new AppearanceRequest();
+        canceled2.setAssignedSuperFrogStudent(s1);
+        canceled2.setAppearanceRequestStatus(AppearanceRequestStatus.CANCELED_DUE_TO_NO_PAYMENT);
+
+        appearances = new ArrayList<>();
+        appearances.add(completed1);
+        appearances.add(completed2);
+        appearances.add(canceled1);
+        appearances.add(canceled2);
     }
 
     @AfterEach
@@ -285,5 +310,54 @@ public class SuperFrogStudentServiceTest {
                 student, List.of(AppearanceRequestStatus.PENDING, AppearanceRequestStatus.APPROVED, AppearanceRequestStatus.ASSIGNED));
         verify(appearanceRequestRepository, times(1)).findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(
                 student, List.of(AppearanceRequestStatus.COMPLETED));
+    }
+
+    @Test
+    void testGeneratePerformanceReport() {
+        // Given
+        SuperFrogStudent student = superFrogStudents.get(0);
+
+        LocalDateTime startDate = LocalDateTime.of(2023, 1, 1, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2023, 12, 31, 23, 59);
+
+        given(superFrogStudentRepository.findById(student.getId())).willReturn(Optional.of(student));
+        given(appearanceRequestService.findCompletedBySuperFrogStudentIdAndDateRange(student, startDate, endDate))
+                .willReturn(appearances);
+
+        // When
+        PerformanceReport report = superFrogStudentService.generatePerformanceReport(student.getId(), startDate, endDate);
+
+        // Then
+        assertThat(report.getSuperFrogStudentId()).isEqualTo(student.getId());
+        assertThat(report.getSuperFrogStudentFirstName()).isEqualTo(student.getFirstName());
+        assertThat(report.getSuperFrogStudentLastName()).isEqualTo(student.getLastName());
+        assertThat(report.getStartDate()).isEqualTo(startDate);
+        assertThat(report.getEndDate()).isEqualTo(endDate);
+        assertThat(report.getCompletedAppearances()).isEqualTo(2);
+        assertThat(report.getCancelledAppearances()).isEqualTo(2);
+    }
+
+    @Test
+    void testGeneratePerformanceReportNoAppearances() {
+        // Given
+        SuperFrogStudent student = superFrogStudents.get(1);
+        LocalDateTime startDate = LocalDateTime.of(2023, 1, 1, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2024, 12, 31, 23, 59);
+
+        given(superFrogStudentRepository.findById(student.getId())).willReturn(Optional.of(student));
+        given(appearanceRequestService.findCompletedBySuperFrogStudentIdAndDateRange(any(), any(), any()))
+                .willReturn(new ArrayList<>());
+
+        // When
+        PerformanceReport report = superFrogStudentService.generatePerformanceReport(student.getId(), startDate, endDate);
+
+        // Then
+        assertThat(report.getSuperFrogStudentId()).isEqualTo(student.getId());
+        assertThat(report.getSuperFrogStudentFirstName()).isEqualTo(student.getFirstName());
+        assertThat(report.getSuperFrogStudentLastName()).isEqualTo(student.getLastName());
+        assertThat(report.getStartDate()).isEqualTo(startDate);
+        assertThat(report.getEndDate()).isEqualTo(endDate);
+        assertThat(report.getCompletedAppearances()).isEqualTo(0);
+        assertThat(report.getCancelledAppearances()).isEqualTo(0);
     }
 }
