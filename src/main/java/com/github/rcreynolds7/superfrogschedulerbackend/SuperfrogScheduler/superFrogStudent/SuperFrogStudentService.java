@@ -2,6 +2,8 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.supe
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestRepository;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReport;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
@@ -10,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,10 +21,13 @@ public class SuperFrogStudentService {
     private final SuperFrogStudentRepository superFrogStudentRepository;
     private final AppearanceRequestRepository appearanceRequestRepository;
 
+    private final AppearanceRequestService appearanceRequestService;
+
     @Autowired
-    public SuperFrogStudentService(SuperFrogStudentRepository superFrogStudentRepository, AppearanceRequestRepository appearanceRequestRepository) {
+    public SuperFrogStudentService(SuperFrogStudentRepository superFrogStudentRepository, AppearanceRequestRepository appearanceRequestRepository, AppearanceRequestService appearanceRequestService) {
         this.superFrogStudentRepository = superFrogStudentRepository;
         this.appearanceRequestRepository = appearanceRequestRepository;
+        this.appearanceRequestService = appearanceRequestService;
     }
 
     public SuperFrogStudent findById(Integer superFrogStudentId) {
@@ -86,5 +92,24 @@ public class SuperFrogStudentService {
                 signedUpAppearances,
                 completedAppearances
         );
+    }
+
+    public PerformanceReport generatePerformanceReport(Integer superFrogStudentId, LocalDateTime startDate, LocalDateTime endDate) {
+        SuperFrogStudent student = this.findById(superFrogStudentId);
+        List<AppearanceRequest> appearances = appearanceRequestService.findCompletedBySuperFrogStudentIdAndDateRange(student, startDate, endDate);
+
+        long completedAppearances = appearances.stream().filter(a -> a.getAppearanceRequestStatus() == AppearanceRequestStatus.COMPLETED).count();
+        long cancelledAppearances = appearances.stream().filter(a -> a.getAppearanceRequestStatus() == AppearanceRequestStatus.CANCELED_BY_THE_SPIRIT_DIRECTOR || a.getAppearanceRequestStatus() == AppearanceRequestStatus.CANCELED_DUE_TO_NO_PAYMENT).count();
+
+        PerformanceReport performanceReport = new PerformanceReport();
+        performanceReport.setSuperFrogStudentId(student.getId());
+        performanceReport.setSuperFrogStudentFirstName(student.getFirstName());
+        performanceReport.setSuperFrogStudentLastName(student.getLastName());
+        performanceReport.setStartDate(startDate);
+        performanceReport.setEndDate(endDate);
+        performanceReport.setCompletedAppearances((int) completedAppearances);
+        performanceReport.setCancelledAppearances((int) cancelledAppearances);
+
+        return performanceReport;
     }
 }

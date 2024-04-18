@@ -6,6 +6,8 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumRequestDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumResponseDto;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReport;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReportRequest;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
@@ -115,7 +117,7 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "Event deleted successfully");
     }
 
-    @PostMapping("/create-honorarium/{superFrogStudentId}")
+    @GetMapping("/create-honorarium/{superFrogStudentId}")
     public Result createHonorarium(@PathVariable Integer superFrogStudentId, @RequestBody HonorariumRequestDto honorariumRequest) {
         LocalDateTime startDate = honorariumRequest.startDate();
         LocalDateTime endDate = honorariumRequest.endDate();
@@ -142,5 +144,11 @@ public class SpiritDirectorController {
         );
 
         return new Result(true, StatusCode.SUCCESS, "Honorarium requests created and submitted to payroll successfully.", responseDto);
+    }
+
+    @GetMapping("/create-performance-report/{superFrogStudentId}")
+    public Result createPerformanceReport(@PathVariable Integer superFrogStudentId, @RequestBody PerformanceReportRequest request) {
+        PerformanceReport report = superFrogStudentService.generatePerformanceReport(superFrogStudentId, request.getStartDate(), request.getEndDate());
+        return new Result(true, StatusCode.SUCCESS, "Performance report generated successfully.", report);
     }
 }
