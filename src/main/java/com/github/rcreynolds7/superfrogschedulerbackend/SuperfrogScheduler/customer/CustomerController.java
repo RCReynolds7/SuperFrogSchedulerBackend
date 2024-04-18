@@ -1,6 +1,7 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.customer;
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestRepository;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
@@ -23,12 +24,11 @@ public class CustomerController {
         this.appearanceRequestRepository = appearanceRequestRepository;
     }
 
-   // @GetMapping("appearance-request/{requestId}/details")
-  //  public Result getAppearanceRequestDetails(@PathVariable Integer appearanceRequestId) {
-     //   AppearanceRequestDetails request = appearanceRequestService.getDetails(appearanceRequestId);
-  //
- //       return new Result(true, StatusCode.SUCCESS, "Appearance request details retrieved successfully", request)
-  //  }
+   @GetMapping("appearance-request/{requestId}/details")
+  public Result getAppearanceRequestDetails(@PathVariable Integer requestId) {
+       AppearanceRequestDetails request = appearanceRequestService.getDetails(requestId);
+       return new Result(true, StatusCode.SUCCESS, "Appearance request details retrieved successfully", request);
+   }
 
     @PostMapping("/request-superfrog-appearance")
     public Result requestSuperFrogAppearance(@RequestBody AppearanceRequest appearanceRequest) {
