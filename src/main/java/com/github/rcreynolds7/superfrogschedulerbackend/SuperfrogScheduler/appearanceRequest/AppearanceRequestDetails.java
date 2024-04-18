@@ -31,13 +31,13 @@ public class AppearanceRequestDetails {
 
     private final String detailedEventDescription;
 
-    private final LocalDateTime date;
+   // private final LocalDateTime date;
 
     private final List<AppearanceRequest> signedUpAppearances;
     private final List<AppearanceRequest> completedAppearances;
 
 
-    public AppearanceRequestDetails(String firstName, String lastName, String email, String phone, String typeOfEvent, String eventTitle, String nameOfOrg, String eventAddress, String isOnCampus, String specialIntructions, String expensesOrBenefits, String otherOrganizationsInvolved, String detailedEventDescription, LocalDateTime date, List<AppearanceRequest> signedUpAppearances, List<AppearanceRequest> completedAppearances) {
+    public AppearanceRequestDetails(String firstName, String lastName, String email, String phone, String typeOfEvent, String eventTitle, String nameOfOrg, String eventAddress, String isOnCampus, String specialIntructions, String expensesOrBenefits, String otherOrganizationsInvolved, String detailedEventDescription, List<AppearanceRequest> signedUpAppearances, List<AppearanceRequest> completedAppearances) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -51,7 +51,7 @@ public class AppearanceRequestDetails {
         this.expensesOrBenefits = expensesOrBenefits;
         this.otherOrganizationsInvolved = otherOrganizationsInvolved;
         this.detailedEventDescription = detailedEventDescription;
-        this.date = date;
+        //this.date = date;
         this.signedUpAppearances = signedUpAppearances;
         this.completedAppearances = completedAppearances;
     }
@@ -73,7 +73,7 @@ public class AppearanceRequestDetails {
 
     public String getTypeOfEvent(){return typeOfEvent;}
 
-    public LocalDateTime getDate(){return date;}
+    //public LocalDateTime getDate(){return date;}
 
     public String getEventTitle(){return eventTitle;}
 

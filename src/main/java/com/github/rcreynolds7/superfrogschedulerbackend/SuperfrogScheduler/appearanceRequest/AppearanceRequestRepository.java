@@ -18,4 +18,12 @@ public interface AppearanceRequestRepository extends JpaRepository<AppearanceReq
             LocalDateTime startDate,
             LocalDateTime endDate
     );
+
+    List<AppearanceRequest> findByAssignedAppearanceRequestStatusIn(AppearanceRequest request, List<AppearanceRequestStatus> statuses);
+    List<AppearanceRequest> findByAssignedAppearanceRequestStatusInAndDateBetween(
+            AppearanceRequest request,
+            List<AppearanceRequest> statuses,
+            LocalDateTime startDate,
+            LocalDateTime endDate
+    );
 }

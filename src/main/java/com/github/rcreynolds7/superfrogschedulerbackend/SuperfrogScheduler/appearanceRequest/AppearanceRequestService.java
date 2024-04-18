@@ -49,32 +49,32 @@ public class AppearanceRequestService {
         });
     }
 
-    public AppearanceRequest updateAppearanceRequest(Integer id, AppearanceRequest requestDetails) {
+    public AppearanceRequest updateAppearanceRequest(Integer requestId, AppearanceRequest update) {
         AppearanceRequest appearanceRequest = this.appearanceRequestRepository
-                .findById(id)
+                .findById(requestId)
                 .map(oldAppearanceRequest -> {
-                    oldAppearanceRequest.setFirstName(requestDetails.getFirstName());
-                    oldAppearanceRequest.setLastName(requestDetails.getLastName());
-                    oldAppearanceRequest.setPhone(requestDetails.getPhone());
-                    oldAppearanceRequest.setEmail(requestDetails.getEmail());
-                    oldAppearanceRequest.setDate(requestDetails.getDate());
-                    oldAppearanceRequest.setTypeOfEvent(requestDetails.getTypeOfEvent());
-                    oldAppearanceRequest.setEventTitle(requestDetails.getEventTitle());
-                    oldAppearanceRequest.setNameOfOrg(requestDetails.getNameOfOrg());
-                    oldAppearanceRequest.setEventAddress(requestDetails.getEventAddress());
-                    oldAppearanceRequest.setIsOnCampus(requestDetails.getIsOnCampus());
-                    oldAppearanceRequest.setSpecialInstructions(requestDetails.getSpecialInstructions());
-                    oldAppearanceRequest.setExpensesOrBenefits(requestDetails.getExpensesOrBenefits());
-                    oldAppearanceRequest.setOtherOrganizationsInvolved(requestDetails.getOtherOrganizationsInvolved());
-                    oldAppearanceRequest.setDetailedEventDescription(requestDetails.getDetailedEventDescription());
+                    oldAppearanceRequest.setFirstName(update.getFirstName());
+                    oldAppearanceRequest.setLastName(update.getLastName());
+                    oldAppearanceRequest.setPhone(update.getPhone());
+                    oldAppearanceRequest.setEmail(update.getEmail());
+                    oldAppearanceRequest.setDate(update.getDate());
+                    oldAppearanceRequest.setTypeOfEvent(update.getTypeOfEvent());
+                    oldAppearanceRequest.setEventTitle(update.getEventTitle());
+                    oldAppearanceRequest.setNameOfOrg(update.getNameOfOrg());
+                    oldAppearanceRequest.setEventAddress(update.getEventAddress());
+                    oldAppearanceRequest.setIsOnCampus(update.getIsOnCampus());
+                    oldAppearanceRequest.setSpecialInstructions(update.getSpecialInstructions());
+                    oldAppearanceRequest.setExpensesOrBenefits(update.getExpensesOrBenefits());
+                    oldAppearanceRequest.setOtherOrganizationsInvolved(update.getOtherOrganizationsInvolved());
+                    oldAppearanceRequest.setDetailedEventDescription(update.getDetailedEventDescription());
                     return oldAppearanceRequest;
                 })
-                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", id));
+                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
         return appearanceRequestRepository.save(appearanceRequest);
     }
-    public void deleteAppearanceRequest(Integer id) {
-        this.appearanceRequestRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", id));
+    public void deleteAppearanceRequest(Integer requestId) {
+        this.appearanceRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
     }
 
 public AppearanceRequestDetails getDetails(Integer requestId) {
