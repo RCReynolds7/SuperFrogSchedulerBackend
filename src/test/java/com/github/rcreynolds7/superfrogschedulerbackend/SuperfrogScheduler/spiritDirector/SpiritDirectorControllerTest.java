@@ -7,6 +7,8 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumRequestDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumResponseDto;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReport;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReportRequest;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
@@ -359,7 +361,7 @@ public class SpiritDirectorControllerTest {
         doNothing().when(appearanceRequestService).updateStatusToSubmittedToPayroll(completedRequests);
 
         // When & Then
-        mockMvc.perform(post(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
+        mockMvc.perform(get(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(honorariumRequest)))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -384,11 +386,65 @@ public class SpiritDirectorControllerTest {
                 .willReturn(new ArrayList<>());
 
         // When & Then
-        mockMvc.perform(post(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
+        mockMvc.perform(get(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(honorariumRequest)))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("No completed appearance requests found for this SuperFrog Student."));
+    }
+
+    @Test
+    void testCreatePerformanceReportSuccess() throws Exception {
+        // Given
+        int superFrogStudentId = 1;
+        LocalDateTime startDate = LocalDateTime.of(2023, 1, 1, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2023, 3, 31, 23, 59);
+        PerformanceReportRequest request = new PerformanceReportRequest();
+        request.setStartDate(startDate);
+        request.setEndDate(endDate);
+
+        SuperFrogStudent student = new SuperFrogStudent();
+        student.setId(superFrogStudentId);
+        student.setFirstName("John");
+        student.setLastName("Doe");
+
+        AppearanceRequest completedRequest = new AppearanceRequest();
+        completedRequest.setAppearanceRequestStatus(AppearanceRequestStatus.COMPLETED);
+        completedRequest.setAssignedSuperFrogStudent(student);
+
+        AppearanceRequest cancelledRequest = new AppearanceRequest();
+        cancelledRequest.setAppearanceRequestStatus(AppearanceRequestStatus.CANCELED_BY_THE_SPIRIT_DIRECTOR);
+        cancelledRequest.setAssignedSuperFrogStudent(student);
+
+        List<AppearanceRequest> appearances = List.of(completedRequest, cancelledRequest);
+
+        PerformanceReport expectedReport = new PerformanceReport();
+        expectedReport.setSuperFrogStudentId(superFrogStudentId);
+        expectedReport.setSuperFrogStudentFirstName("John");
+        expectedReport.setSuperFrogStudentLastName("Doe");
+        expectedReport.setStartDate(startDate);
+        expectedReport.setEndDate(endDate);
+        expectedReport.setCompletedAppearances(1);
+        expectedReport.setCancelledAppearances(1);
+
+        given(superFrogStudentService.findById(superFrogStudentId)).willReturn(student);
+        given(appearanceRequestService.findCompletedBySuperFrogStudentIdAndDateRange(student, startDate, endDate))
+                .willReturn(appearances);
+        given(superFrogStudentService.generatePerformanceReport(superFrogStudentId, startDate, endDate))
+                .willReturn(expectedReport);
+
+        // When & Then
+        mockMvc.perform(get(baseUrl + "/create-performance-report/{superFrogStudentId}", superFrogStudentId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Performance report generated successfully."))
+                .andExpect(jsonPath("$.data.superFrogStudentId").value(superFrogStudentId))
+                .andExpect(jsonPath("$.data.superFrogStudentFirstName").value("John"))
+                .andExpect(jsonPath("$.data.superFrogStudentLastName").value("Doe"))
+                .andExpect(jsonPath("$.data.completedAppearances").value(1))
+                .andExpect(jsonPath("$.data.cancelledAppearances").value(1));
     }
 }

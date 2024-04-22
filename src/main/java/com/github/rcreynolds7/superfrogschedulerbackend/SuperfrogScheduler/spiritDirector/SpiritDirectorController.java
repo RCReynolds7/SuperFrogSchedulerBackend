@@ -6,6 +6,8 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumRequestDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumResponseDto;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReport;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReportRequest;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentDetails;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudentService;
@@ -33,7 +35,7 @@ public class SpiritDirectorController {
         this.appearanceRequestService = appearanceRequestService;
     }
 
-    @PutMapping("superfrog-students/{superFrogStudentId}/deactivate")
+    @PutMapping("/superfrog-students/{superFrogStudentId}/deactivate")
     public Result deactivateSuperFrogStudent(@PathVariable Integer superFrogStudentId) {
         // Fetch the student to deactivate
         SuperFrogStudent superFrogStudent = superFrogStudentService.findById(superFrogStudentId);
@@ -44,7 +46,7 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "SuperFrog Student deactivated successfully");
     }
 
-    @GetMapping("superfrog-students/search")
+    @GetMapping("/superfrog-students/search")
     public Result searchSuperFrogStudents(
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
@@ -71,7 +73,24 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "SuperFrog student search completed successfully", resultDtos);
     }
 
-    @GetMapping("superfrog-students/{superFrogStudentId}/details")
+    @GetMapping("/superfrog-students")
+    public Result getAllSuperFrogStudents() {
+        List<SuperFrogStudent> students = superFrogStudentService.findAll();
+        List<SuperFrogStudentDto> resultDtos = students.stream()
+                .map(student -> new SuperFrogStudentDto(
+                        student.getId().toString(),
+                        student.getFirstName(),
+                        student.getLastName(),
+                        student.getEmail(),
+                        student.getPhone(),
+                        student.getAddress(),
+                        student.getActive()))
+                .collect(Collectors.toList());
+
+        return new Result(true, StatusCode.SUCCESS, "SuperFrog students retrieved successfully", resultDtos);
+    }
+
+    @GetMapping("/superfrog-students/{superFrogStudentId}/details")
     public Result getSuperFrogStudentDetails(@PathVariable Integer superFrogStudentId) {
         SuperFrogStudentDetails student = superFrogStudentService.getDetails(superFrogStudentId);
 
@@ -115,7 +134,7 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "Event deleted successfully");
     }
 
-    @PostMapping("/create-honorarium/{superFrogStudentId}")
+    @GetMapping("/create-honorarium/{superFrogStudentId}")
     public Result createHonorarium(@PathVariable Integer superFrogStudentId, @RequestBody HonorariumRequestDto honorariumRequest) {
         LocalDateTime startDate = honorariumRequest.startDate();
         LocalDateTime endDate = honorariumRequest.endDate();
@@ -142,5 +161,11 @@ public class SpiritDirectorController {
         );
 
         return new Result(true, StatusCode.SUCCESS, "Honorarium requests created and submitted to payroll successfully.", responseDto);
+    }
+
+    @GetMapping("/create-performance-report/{superFrogStudentId}")
+    public Result createPerformanceReport(@PathVariable Integer superFrogStudentId, @RequestBody PerformanceReportRequest request) {
+        PerformanceReport report = superFrogStudentService.generatePerformanceReport(superFrogStudentId, request.getStartDate(), request.getEndDate());
+        return new Result(true, StatusCode.SUCCESS, "Performance report generated successfully.", report);
     }
 }
