@@ -35,7 +35,7 @@ public class SpiritDirectorController {
         this.appearanceRequestService = appearanceRequestService;
     }
 
-    @PutMapping("superfrog-students/{superFrogStudentId}/deactivate")
+    @PutMapping("/superfrog-students/{superFrogStudentId}/deactivate")
     public Result deactivateSuperFrogStudent(@PathVariable Integer superFrogStudentId) {
         // Fetch the student to deactivate
         SuperFrogStudent superFrogStudent = superFrogStudentService.findById(superFrogStudentId);
@@ -46,7 +46,7 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "SuperFrog Student deactivated successfully");
     }
 
-    @GetMapping("superfrog-students/search")
+    @GetMapping("/superfrog-students/search")
     public Result searchSuperFrogStudents(
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
@@ -73,7 +73,24 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "SuperFrog student search completed successfully", resultDtos);
     }
 
-    @GetMapping("superfrog-students/{superFrogStudentId}/details")
+    @GetMapping("/superfrog-students")
+    public Result getAllSuperFrogStudents() {
+        List<SuperFrogStudent> students = superFrogStudentService.findAll();
+        List<SuperFrogStudentDto> resultDtos = students.stream()
+                .map(student -> new SuperFrogStudentDto(
+                        student.getId().toString(),
+                        student.getFirstName(),
+                        student.getLastName(),
+                        student.getEmail(),
+                        student.getPhone(),
+                        student.getAddress(),
+                        student.getActive()))
+                .collect(Collectors.toList());
+
+        return new Result(true, StatusCode.SUCCESS, "SuperFrog students retrieved successfully", resultDtos);
+    }
+
+    @GetMapping("/superfrog-students/{superFrogStudentId}/details")
     public Result getSuperFrogStudentDetails(@PathVariable Integer superFrogStudentId) {
         SuperFrogStudentDetails student = superFrogStudentService.getDetails(superFrogStudentId);
 
