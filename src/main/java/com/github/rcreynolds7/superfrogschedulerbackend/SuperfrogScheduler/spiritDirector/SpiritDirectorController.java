@@ -177,10 +177,10 @@ public class SpiritDirectorController {
               .map(request -> new AppearanceRequestDto(
                       request.getId(),
                       request.getEventTitle(),
-                      request.getEventAddress(),
+                      request.getStartDate(),
+                      request.getEndDate(),
                       request.getFirstName(),
-                      request.getAppearanceRequestStatus(),
-                      request.getLastName()
+                      request.getLastName()))
               .collect(Collectors.toList());
 
       return new Result(true, StatusCode.SUCCESS, "Appearance request retrieved successfully", resultDtos);

@@ -17,7 +17,8 @@ public record AppearanceRequestDto (int requestId,
                                     @NotEmpty(message = "expenses or benefits are required.") String expensesOrBenefits,
                                     @NotEmpty(message = "other organizations involved are required.") String otherOrganizationsInvolved,
                                     @NotEmpty(message = "detailed event descripiton required.") String detailedEventDescription,
-                                    @NotEmpty(message = "appearenceRequestStatus required.") String appearanceRequestStatus
+                                    @NotEmpty(message = "appearenceRequestStatus required.") String appearanceRequestStatus,
+                                    @NotEmpty(message = "Date required") LocalDateTime date
 
 
 
