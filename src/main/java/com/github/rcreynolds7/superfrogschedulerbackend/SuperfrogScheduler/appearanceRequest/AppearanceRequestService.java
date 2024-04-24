@@ -93,6 +93,6 @@ public class AppearanceRequestService {
         if (StringUtils.hasText(id)) {
             spec = spec.and(AppearanceRequestSpecifications.withId(id));
         }
-        return appearanceRequestRepository.findAll((Sort) spec);
+        return appearanceRequestRepository.findAll(spec);
     }
 }

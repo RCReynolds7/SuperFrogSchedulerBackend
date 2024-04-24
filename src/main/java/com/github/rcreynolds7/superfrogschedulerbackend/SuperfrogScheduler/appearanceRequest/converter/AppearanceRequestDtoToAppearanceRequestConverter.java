@@ -18,7 +18,7 @@ public class AppearanceRequestDtoToAppearanceRequestConverter implements Convert
         appearanceRequest.setId(source.requestId());
         appearanceRequest.setTypeOfEvent(source.typeOfEvent());
         appearanceRequest.setEventAddress(source.eventAddress());
-        appearanceRequest.setAppearanceRequestStatus(AppearanceRequestStatus.valueOf(source.appearanceRequestStatus()));
+        appearanceRequest.setAppearanceRequestStatus(source.appearanceRequestStatus());
         appearanceRequest.setFirstName(source.firstName());
         appearanceRequest.setLastName(source.lastName());
         appearanceRequest.setPhone(source.phone());
