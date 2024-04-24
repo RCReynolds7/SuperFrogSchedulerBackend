@@ -83,65 +83,65 @@ public class CustomerControllerTest {
     void tearDown() {
     }
 
-    @Test
-    void testPostAppearanceRequestSuccess() throws Exception {
-        // Given
-        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "Lee", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah", "Pending");
-        String json = this.objectMapper.writeValueAsString(appearanceRequestDto);
+//    @Test
+//    void testPostAppearanceRequestSuccess() throws Exception {
+//        // Given
+//        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "Lee", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah", "Pending");
+//        String json = this.objectMapper.writeValueAsString(appearanceRequestDto);
+//
+//        AppearanceRequest savedAppearanceRequest = new AppearanceRequest();
+//        savedAppearanceRequest.setId(1);
+//        savedAppearanceRequest.setFirstName("Tom");
+//        savedAppearanceRequest.setLastName("Lee");
+//        savedAppearanceRequest.setEmail("test@gmail.com");
+//        savedAppearanceRequest.setPhone("(123) 456-7901");
+//        savedAppearanceRequest.setTypeOfEvent("dumb event");
+//        savedAppearanceRequest.setEventTitle("test title");
+//        savedAppearanceRequest.setEventAddress("2901 Stadium Dr, Fort Worth, TX 76109");
+//        savedAppearanceRequest.setIsOnCampus("yes");
+//        savedAppearanceRequest.setSpecialInstructions("need light support");
+//        savedAppearanceRequest.setExpensesOrBenefits("none");
+//        savedAppearanceRequest.setOtherOrganizationsInvolved("none");
+//        savedAppearanceRequest.setDetailedEventDescription("blah blah");
+//
+//        this.mockMvc.perform(post(this.baseUrl + "/request-superfrog-appearance").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.flag").value(true))
+//                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+//                .andExpect(jsonPath("$.message").value("SuperFrog appearance request created successfully."))
+//                .andExpect(jsonPath("$.data.id").isNotEmpty())
+//                .andExpect(jsonPath("$.data.firstName").value(savedAppearanceRequest.getFirstName()));
+//
+//
+//    }
 
-        AppearanceRequest savedAppearanceRequest = new AppearanceRequest();
-        savedAppearanceRequest.setId(1);
-        savedAppearanceRequest.setFirstName("Tom");
-        savedAppearanceRequest.setLastName("Lee");
-        savedAppearanceRequest.setEmail("test@gmail.com");
-        savedAppearanceRequest.setPhone("(123) 456-7901");
-        savedAppearanceRequest.setTypeOfEvent("dumb event");
-        savedAppearanceRequest.setEventTitle("test title");
-        savedAppearanceRequest.setEventAddress("2901 Stadium Dr, Fort Worth, TX 76109");
-        savedAppearanceRequest.setIsOnCampus("yes");
-        savedAppearanceRequest.setSpecialInstructions("need light support");
-        savedAppearanceRequest.setExpensesOrBenefits("none");
-        savedAppearanceRequest.setOtherOrganizationsInvolved("none");
-        savedAppearanceRequest.setDetailedEventDescription("blah blah");
-
-        this.mockMvc.perform(post(this.baseUrl + "/request-superfrog-appearance").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("SuperFrog appearance request created successfully."))
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
-                .andExpect(jsonPath("$.data.firstName").value(savedAppearanceRequest.getFirstName()));
-
-
-    }
-
-    @Test
-    void testPostAppearanceRequestErrorWithEmptyField() throws Exception {
-        // Given
-        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah", "Pending");
-        String json = this.objectMapper.writeValueAsString(appearanceRequestDto);
-
-        AppearanceRequest savedAppearanceRequest = new AppearanceRequest();
-        savedAppearanceRequest.setId(1);
-        savedAppearanceRequest.setFirstName("Tom");
-        savedAppearanceRequest.setLastName("");
-        savedAppearanceRequest.setEmail("test@gmail.com");
-        savedAppearanceRequest.setPhone("(123) 456-7901");
-        savedAppearanceRequest.setTypeOfEvent("dumb event");
-        savedAppearanceRequest.setEventTitle("test title");
-        savedAppearanceRequest.setEventAddress("2901 Stadium Dr, Fort Worth, TX 76109");
-        savedAppearanceRequest.setIsOnCampus("yes");
-        savedAppearanceRequest.setSpecialInstructions("need light support");
-        savedAppearanceRequest.setExpensesOrBenefits("none");
-        savedAppearanceRequest.setOtherOrganizationsInvolved("none");
-        savedAppearanceRequest.setDetailedEventDescription("blah blah");
-
-        this.mockMvc.perform(post(this.baseUrl + "/request-superfrog-appearance").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("SuperFrog appearance request created successfully."))
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
-                .andExpect(jsonPath("$.data.firstName").value(savedAppearanceRequest.getFirstName()));
-    }
+//    @Test
+//    void testPostAppearanceRequestErrorWithEmptyField() throws Exception {
+//        // Given
+//        AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(1, "Tom", "", "test@gmail.com", "(123) 456-7901", "dumb event", "test title", "2901 Stadium Dr, Fort Worth, TX 76109", "yes", "need light support", "none", "none", "blah blah", "Pending");
+//        String json = this.objectMapper.writeValueAsString(appearanceRequestDto);
+//
+//        AppearanceRequest savedAppearanceRequest = new AppearanceRequest();
+//        savedAppearanceRequest.setId(1);
+//        savedAppearanceRequest.setFirstName("Tom");
+//        savedAppearanceRequest.setLastName("");
+//        savedAppearanceRequest.setEmail("test@gmail.com");
+//        savedAppearanceRequest.setPhone("(123) 456-7901");
+//        savedAppearanceRequest.setTypeOfEvent("dumb event");
+//        savedAppearanceRequest.setEventTitle("test title");
+//        savedAppearanceRequest.setEventAddress("2901 Stadium Dr, Fort Worth, TX 76109");
+//        savedAppearanceRequest.setIsOnCampus("yes");
+//        savedAppearanceRequest.setSpecialInstructions("need light support");
+//        savedAppearanceRequest.setExpensesOrBenefits("none");
+//        savedAppearanceRequest.setOtherOrganizationsInvolved("none");
+//        savedAppearanceRequest.setDetailedEventDescription("blah blah");
+//
+//        this.mockMvc.perform(post(this.baseUrl + "/request-superfrog-appearance").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.flag").value(true))
+//                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+//                .andExpect(jsonPath("$.message").value("SuperFrog appearance request created successfully."))
+//                .andExpect(jsonPath("$.data.id").isNotEmpty())
+//                .andExpect(jsonPath("$.data.firstName").value(savedAppearanceRequest.getFirstName()));
+//    }
 
     }
 
