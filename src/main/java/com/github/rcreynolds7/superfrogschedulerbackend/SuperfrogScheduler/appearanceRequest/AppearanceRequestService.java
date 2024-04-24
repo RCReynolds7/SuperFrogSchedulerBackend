@@ -25,7 +25,6 @@ public class AppearanceRequestService {
                 .orElseThrow(() -> new ObjectNotFoundException("AppearanceRequest", requestId));
     }
 
-
     public List<AppearanceRequest> findAll() {
         return this.appearanceRequestRepository.findAll();
     }
