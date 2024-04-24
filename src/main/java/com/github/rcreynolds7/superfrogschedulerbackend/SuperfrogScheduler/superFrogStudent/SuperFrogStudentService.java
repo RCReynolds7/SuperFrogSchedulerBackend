@@ -4,13 +4,17 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appea
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestRepository;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReport;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import java.util.Optional;
+import java.util.UUID;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -112,4 +116,38 @@ public class SuperFrogStudentService {
 
         return performanceReport;
     }
+    @Transactional
+    public SuperFrogStudent createSuperFrogStudent(SuperFrogStudentDto studentDto) {
+        validateEmailUniqueness(studentDto.email());
+        SuperFrogStudent student = mapDtoToEntity(studentDto);
+        superFrogStudentRepository.save(student);
+        return student;
+    }
+
+        private void validateEmailUniqueness(String email) {
+            Optional<SuperFrogStudent> existingStudent = superFrogStudentRepository.findByEmail(email);
+            if (existingStudent.isPresent()) {
+                throw new IllegalStateException("Email already in use.");
+            }
+        }
+
+        private SuperFrogStudent mapDtoToEntity(SuperFrogStudentDto studentDto) {
+            SuperFrogStudent student = new SuperFrogStudent();
+            student.setFirstName(student.getFirstName());
+            student.setLastName(student.getLastName());
+            student.setEmail(student.getEmail());
+            student.setPhone(student.getPhone());
+            student.setAddress(student.getAddress());
+            student.setActive(student.getActive());
+            student.setInternational(student.getInternational());
+            student.setPaymentPreference(student.getPaymentPreference());
+            return student;
+        }
+
+        private String generateTemporaryPassword() {
+            return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);  // Generate a simple 8-character password
+        }
+
+
+
 }

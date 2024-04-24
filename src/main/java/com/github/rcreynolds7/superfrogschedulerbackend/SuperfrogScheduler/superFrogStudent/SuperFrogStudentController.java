@@ -1,8 +1,11 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -55,4 +58,16 @@ public class SuperFrogStudentController {
 
         return new Result(true, StatusCode.SUCCESS, "SuperFrog Student information updated successfully");
     }
+    @PostMapping("/{superfrog-students}")
+    public ResponseEntity<?> createSuperFrogStudent(@RequestBody SuperFrogStudentDto studentDto) {
+        try {
+            SuperFrogStudent createdStudent = superFrogStudentService.createSuperFrogStudent(studentDto);
+            return ResponseEntity.ok(createdStudent);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("An unexpected error occurred: " + e.getMessage());
+        }
+    }
+
 }
