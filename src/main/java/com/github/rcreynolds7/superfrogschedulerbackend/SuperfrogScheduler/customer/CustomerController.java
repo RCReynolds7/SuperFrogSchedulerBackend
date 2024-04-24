@@ -26,7 +26,6 @@ public class CustomerController {
 
     @PostMapping("/request-superfrog-appearance")
     public Result requestSuperFrogAppearance(@RequestBody AppearanceRequest appearanceRequest) {
-        // Create appearance request service in the database
         AppearanceRequest savedAppearanceRequest = this.appearanceRequestService.save(appearanceRequest);
 
         return new Result(true, StatusCode.SUCCESS, "SuperFrog appearance request created successfully.", savedAppearanceRequest);
@@ -98,7 +97,7 @@ public class CustomerController {
     }
 
 
-    
+
 
 // Cancels a request
     @DeleteMapping("/appearance-requests/{requestId}")

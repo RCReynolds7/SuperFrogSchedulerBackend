@@ -2,6 +2,7 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spir
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.dto.AppearanceRequestDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.Event;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumRequestDto;
@@ -168,4 +169,23 @@ public class SpiritDirectorController {
         PerformanceReport report = superFrogStudentService.generatePerformanceReport(superFrogStudentId, request.getStartDate(), request.getEndDate());
         return new Result(true, StatusCode.SUCCESS, "Performance report generated successfully.", report);
     }
+
+  @GetMapping("/appearance-requests")
+  public Result getAllAppearanceRequest() {
+      List<AppearanceRequest> requests = AppearanceRequestService.findAll();
+      List<AppearanceRequestDto> resultDtos = requests.stream()
+              .map(request -> new AppearanceRequestDto(
+                      request.getId(),
+                      request.getEventTitle(),
+                      request.getEventAddress(),
+                      request.getFirstName(),
+                      request.getAppearanceRequestStatus(),
+                      request.getLastName()
+              .collect(Collectors.toList());
+
+      return new Result(true, StatusCode.SUCCESS, "Appearance request retrieved successfully", resultDtos);
+  }
+
+
+
 }
