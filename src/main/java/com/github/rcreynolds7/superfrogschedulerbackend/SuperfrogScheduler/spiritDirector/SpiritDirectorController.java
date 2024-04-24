@@ -134,7 +134,7 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "Event deleted successfully");
     }
 
-    @GetMapping("/create-honorarium/{superFrogStudentId}")
+    @PostMapping ("/create-honorarium/{superFrogStudentId}")
     public Result createHonorarium(@PathVariable Integer superFrogStudentId, @RequestBody HonorariumRequestDto honorariumRequest) {
         LocalDateTime startDate = honorariumRequest.startDate();
         LocalDateTime endDate = honorariumRequest.endDate();

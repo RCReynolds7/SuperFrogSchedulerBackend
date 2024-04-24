@@ -361,7 +361,7 @@ public class SpiritDirectorControllerTest {
         doNothing().when(appearanceRequestService).updateStatusToSubmittedToPayroll(completedRequests);
 
         // When & Then
-        mockMvc.perform(get(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
+        mockMvc.perform(post(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(honorariumRequest)))
                 .andExpect(jsonPath("$.flag").value(true))
@@ -386,7 +386,7 @@ public class SpiritDirectorControllerTest {
                 .willReturn(new ArrayList<>());
 
         // When & Then
-        mockMvc.perform(get(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
+        mockMvc.perform(post(baseUrl + "/create-honorarium/{superFrogStudentId}", superFrogStudentId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(honorariumRequest)))
                 .andExpect(jsonPath("$.flag").value(false))
