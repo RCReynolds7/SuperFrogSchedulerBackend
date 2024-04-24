@@ -163,7 +163,7 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "Honorarium requests created and submitted to payroll successfully.", responseDto);
     }
 
-    @GetMapping("/create-performance-report/{superFrogStudentId}")
+    @PostMapping("/create-performance-report/{superFrogStudentId}")
     public Result createPerformanceReport(@PathVariable Integer superFrogStudentId, @RequestBody PerformanceReportRequest request) {
         PerformanceReport report = superFrogStudentService.generatePerformanceReport(superFrogStudentId, request.getStartDate(), request.getEndDate());
         return new Result(true, StatusCode.SUCCESS, "Performance report generated successfully.", report);

@@ -435,7 +435,7 @@ public class SpiritDirectorControllerTest {
                 .willReturn(expectedReport);
 
         // When & Then
-        mockMvc.perform(get(baseUrl + "/create-performance-report/{superFrogStudentId}", superFrogStudentId)
+        mockMvc.perform(post(baseUrl + "/create-performance-report/{superFrogStudentId}", superFrogStudentId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(jsonPath("$.flag").value(true))
