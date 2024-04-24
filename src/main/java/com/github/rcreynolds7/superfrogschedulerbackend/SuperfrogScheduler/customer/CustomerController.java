@@ -32,6 +32,7 @@ public class CustomerController {
         return new Result(true, StatusCode.SUCCESS, "SuperFrog appearance request created successfully.", savedAppearanceRequest);
     }
 
+    // Customer edits request details
     @PutMapping("/appearance-requests/{appearanceRequestId}")
     public Result updateAppearanceRequest(@PathVariable Integer appearanceRequestId, @RequestBody AppearanceRequest appearanceRequestUpdate) {
         AppearanceRequest appearanceRequest = appearanceRequestService.findById(appearanceRequestId);
@@ -97,7 +98,9 @@ public class CustomerController {
     }
 
 
+    
 
+// Cancels a request
     @DeleteMapping("/appearance-requests/{requestId}")
     public Result deleteAppearanceRequest(@PathVariable Integer requestId) {
         this.appearanceRequestService.deleteAppearanceRequest(requestId);
