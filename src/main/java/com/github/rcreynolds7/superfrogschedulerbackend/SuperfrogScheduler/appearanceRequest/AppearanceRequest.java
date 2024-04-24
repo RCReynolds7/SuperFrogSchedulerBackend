@@ -61,7 +61,6 @@ public class AppearanceRequest {
 
     @Enumerated(EnumType.STRING) // This stores the Enum as a String in the database
     private AppearanceRequestStatus appearanceRequestStatus = AppearanceRequestStatus.PENDING;
-
     @ManyToOne
     private SuperFrogStudent assignedSuperFrogStudent;
 

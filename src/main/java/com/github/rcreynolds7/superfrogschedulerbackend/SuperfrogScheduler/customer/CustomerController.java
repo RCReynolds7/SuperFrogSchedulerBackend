@@ -24,12 +24,6 @@ public class CustomerController {
         this.appearanceRequestRepository = appearanceRequestRepository;
     }
 
-   @GetMapping("appearance-request/{requestId}/details")
-  public Result getAppearanceRequestDetails(@PathVariable Integer requestId) {
-       AppearanceRequestDetails request = appearanceRequestService.getDetails(requestId);
-       return new Result(true, StatusCode.SUCCESS, "Appearance request details retrieved successfully", request);
-   }
-
     @PostMapping("/request-superfrog-appearance")
     public Result requestSuperFrogAppearance(@RequestBody AppearanceRequest appearanceRequest) {
         // Create appearance request service in the database
@@ -38,7 +32,7 @@ public class CustomerController {
         return new Result(true, StatusCode.SUCCESS, "SuperFrog appearance request created successfully.", savedAppearanceRequest);
     }
 
-    @PutMapping("/appearance-requests/{requestId}")
+    @PutMapping("/appearance-requests/{appearanceRequestId}")
     public Result updateAppearanceRequest(@PathVariable Integer appearanceRequestId, @RequestBody AppearanceRequest appearanceRequestUpdate) {
         AppearanceRequest appearanceRequest = appearanceRequestService.findById(appearanceRequestId);
 
@@ -97,10 +91,12 @@ public class CustomerController {
                 .filter(detailedEventDescription -> !detailedEventDescription.isEmpty())
                 .ifPresent(appearanceRequest::setDetailedEventDescription);
 
-        appearanceRequestService.update(appearanceRequestId, appearanceRequest);
+        AppearanceRequest updatedAppearanceRequest = appearanceRequestService.update(appearanceRequestId, appearanceRequest);
 
-        return new Result(true, StatusCode.SUCCESS, "Appearance request information updated successfully");
+        return new Result(true, StatusCode.SUCCESS, "Appearance request information updated successfully", updatedAppearanceRequest);
     }
+
+
 
     @DeleteMapping("/appearance-requests/{requestId}")
     public Result deleteAppearanceRequest(@PathVariable Integer requestId) {

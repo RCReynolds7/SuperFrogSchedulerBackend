@@ -76,36 +76,4 @@ public class AppearanceRequestService {
         this.appearanceRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
     }
-
-public AppearanceRequestDetails getDetails(Integer requestId) {
-        AppearanceRequest request = findById(requestId);
-
-        List<AppearanceRequest> signedUpAppearances = appearanceRequestRepository.findByAssignedAppearanceRequestStatusIn(request, List.of(
-                AppearanceRequestStatus.PENDING,
-                AppearanceRequestStatus.APPROVED,
-                AppearanceRequestStatus.ASSIGNED
-        ));
-
-        List<AppearanceRequest> completedAppearances = appearanceRequestRepository.findByAssignedAppearanceRequestStatusIn(request, List.of(AppearanceRequestStatus.COMPLETED));
-
-        return new AppearanceRequestDetails(
-                request.getFirstName(),
-                request.getLastName(),
-                request.getEmail(),
-                request.getPhone(),
-                request.getTypeOfEvent(),
-                request.getEventTitle(),
-                request.getNameOfOrg(),
-                request.getEventAddress(),
-                request.getIsOnCampus(),
-                request.getSpecialInstructions(),
-                request.getExpensesOrBenefits(),
-                request.getOtherOrganizationsInvolved(),
-                request.getDetailedEventDescription(),
-                signedUpAppearances,
-                completedAppearances
-
-        );
-}
-
 }
