@@ -171,21 +171,44 @@ public class SpiritDirectorController {
     }
 
   @GetMapping("/appearance-requests")
-  public Result getAllAppearanceRequest() {
-      List<AppearanceRequest> requests = AppearanceRequestService.findAll();
-      List<AppearanceRequestDto> resultDtos = requests.stream()
-              .map(request -> new AppearanceRequestDto(
-                      request.getId(),
-                      request.getEventTitle(),
-                      request.getStartDate(),
-                      request.getEndDate(),
-                      request.getFirstName(),
-                      request.getLastName()))
-              .collect(Collectors.toList());
+  public Result getAllAppearanceRequests(
+          @RequestParam(required = false) String id,
+          @RequestParam(required = false) String eventTitle,
+          @RequestParam(required = false) String firstName,
+          @RequestParam(required = false) String lastName
 
-      return new Result(true, StatusCode.SUCCESS, "Appearance request retrieved successfully", resultDtos);
-  }
+  ) {
+      // Check if all search parameters are empty
+      if (!StringUtils.hasText(firstName) && !StringUtils.hasText(lastName)
+              && !StringUtils.hasText(id) && !StringUtils.hasText(eventTitle)) {
+          return new Result(false, StatusCode.INVALID_ARGUMENT, "At least one search parameter must be provided");
+      }
 
 
+    List<AppearanceRequest> requests = appearanceRequestService.searchRequests(id, firstName, lastName, eventTitle);
+    List<AppearanceRequestDto> resultDtos = requests.stream()
+            .map(request -> new AppearanceRequestDto(
+                    request.getId(),
+                    request.getFirstName(),
+                    request.getLastName(),
+                    request.getEventTitle(),
+                    request.getEmail(),
+                    request.getTypeOfEvent(),
+                    request.getPhone(),
+                    request.getEventAddress(),
+                    request.getIsOnCampus(),
+                    request.getSpecialInstructions(),
+                    request.getExpensesOrBenefits(),
+                    request.getOtherOrganizationsInvolved(),
+                    request.getDetailedEventDescription(),
+                    request.getAppearanceRequestStatus(),
+                    request.getDate()
+                    ))
+            .collect(Collectors.toList());
+
+
+                    return new Result(true, StatusCode.SUCCESS, "Appearance request retrieved successfully", resultDtos);
+
+    }
 
 }

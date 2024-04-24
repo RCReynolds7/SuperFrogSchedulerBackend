@@ -4,7 +4,10 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.super
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -74,5 +77,22 @@ public class AppearanceRequestService {
     public void deleteAppearanceRequest(Integer requestId) {
         this.appearanceRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
+    }
+
+    public List<AppearanceRequest> searchRequests(String id, String firstName, String lastName, String eventTitle) {
+        Specification<AppearanceRequest> spec = Specification.where(null);
+        if (StringUtils.hasText(firstName)) {
+            spec = spec.and(AppearanceRequestSpecifications.withFirstName(firstName));
+        }
+        if (StringUtils.hasText(lastName)) {
+            spec = spec.and(AppearanceRequestSpecifications.withLastName(lastName));
+        }
+        if (StringUtils.hasText(eventTitle)) {
+            spec = spec.and(AppearanceRequestSpecifications.withEventTitle(eventTitle));
+        }
+        if (StringUtils.hasText(id)) {
+            spec = spec.and(AppearanceRequestSpecifications.withId(id));
+        }
+        return appearanceRequestRepository.findAll((Sort) spec);
     }
 }
