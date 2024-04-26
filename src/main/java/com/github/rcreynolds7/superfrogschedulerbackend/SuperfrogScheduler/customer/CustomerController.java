@@ -96,11 +96,6 @@ public class CustomerController {
         return new Result(true, StatusCode.SUCCESS, "Appearance request information updated successfully", updatedAppearanceRequest);
     }
 
-    @DeleteMapping("/appearance-requests/{requestId}")
-    public Result deleteAppearanceRequest(@PathVariable Integer requestId) {
-        this.appearanceRequestService.deleteAppearanceRequest(requestId);
-        return new Result(true, StatusCode.SUCCESS, "Appearance Request deleted successfully.");
-    }
 }
 
 

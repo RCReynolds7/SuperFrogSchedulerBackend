@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AppearanceRequestToAppearanceRequestDtoConverter implements Converter<AppearanceRequest, AppearanceRequestDto> {
-    
+
+    private AppearanceRequestToAppearanceRequestDtoConverter superFrogToSuperFrogDtoConverter;
+
     @Override
     public AppearanceRequestDto convert(AppearanceRequest source) {
         AppearanceRequestDto appearanceRequestDto = new AppearanceRequestDto(
@@ -30,7 +32,7 @@ public class AppearanceRequestToAppearanceRequestDtoConverter implements Convert
                 source.getAppearanceRequestStatus(),
                 source.getDate());
 
-                //source.getStudent() != null ? this.superFrogToSuperFrogDtoConverter.convert(source.getStudent()) : null);
+              //  source.getStudent() != null ? this.superFrogToSuperFrogDtoConverter.convert(source.getStudent()) : null);
         return appearanceRequestDto;
     }
 }

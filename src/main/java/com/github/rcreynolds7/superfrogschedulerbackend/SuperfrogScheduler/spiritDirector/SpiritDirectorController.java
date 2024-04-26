@@ -201,7 +201,7 @@ public class SpiritDirectorController {
                     request.getExpensesOrBenefits(),
                     request.getOtherOrganizationsInvolved(),
                     request.getDetailedEventDescription(),
-                    request.getAppearanceRequestStatus(),
+                    request.getSpecialInstructions(), request.getAppearanceRequestStatus(),
                     request.getDate()
                     ))
             .collect(Collectors.toList());
