@@ -77,6 +77,9 @@ public class AppearanceRequest {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate = LocalDateTime.now();
 
+    @ManyToOne
+    private SuperFrogStudent student;
+
     // Construct
 
     public AppearanceRequest() {
@@ -246,6 +249,13 @@ public class AppearanceRequest {
         this.endDate = endDate;
     }
 
+    public void setStudent(SuperFrogStudent student) {
+        this.student = student;
+    }
+
+    public SuperFrogStudent getStudent () {
+        return student;
+    }
 
 }
 

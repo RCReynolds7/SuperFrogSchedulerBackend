@@ -22,7 +22,7 @@ public class AppearanceRequestDtoToAppearanceRequestConverter implements Convert
         appearanceRequest.setFirstName(source.firstName());
         appearanceRequest.setLastName(source.lastName());
         appearanceRequest.setPhone(source.phone());
-       // appearanceRequest.setDate(source.date());
+        appearanceRequest.setDate(source.date());
         appearanceRequest.setEmail(source.email());
         appearanceRequest.setEventTitle(source.eventTitle());
         appearanceRequest.setDetailedEventDescription(source.detailedEventDescription());
