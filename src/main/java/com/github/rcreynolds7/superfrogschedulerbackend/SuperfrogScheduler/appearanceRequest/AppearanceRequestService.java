@@ -17,7 +17,9 @@ import java.util.List;
 public class AppearanceRequestService {
     private final AppearanceRequestRepository appearanceRequestRepository;
 
-    public AppearanceRequest createAppearanceRequest(AppearanceRequest request) { return this.appearanceRequestRepository.save(request);}
+    public AppearanceRequest createAppearanceRequest(AppearanceRequest request) {
+        return this.appearanceRequestRepository.save(request);
+    }
 
     public AppearanceRequestService(AppearanceRequestRepository appearanceRequestRepository) {
         this.appearanceRequestRepository = appearanceRequestRepository;
@@ -74,9 +76,11 @@ public class AppearanceRequestService {
                 .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
         return appearanceRequestRepository.save(appearanceRequest);
     }
+
     public void deleteAppearanceRequest(Integer requestId) {
         this.appearanceRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
+        this.appearanceRequestRepository.deleteById(requestId);
     }
 
     public List<AppearanceRequest> searchRequests(String id, String firstName, String lastName, String eventTitle) {
@@ -94,5 +98,23 @@ public class AppearanceRequestService {
             spec = spec.and(AppearanceRequestSpecifications.withId(id));
         }
         return appearanceRequestRepository.findAll(spec);
+    }
+
+    public AppearanceRequest updateStatus(Integer requestId, AppearanceRequestStatus status) {
+        return this.appearanceRequestRepository.findById(requestId)
+                .map(oldRequest -> {
+                    oldRequest.setAppearanceRequestStatus(status);
+                    return this.appearanceRequestRepository.save(oldRequest);
+                })
+                .orElseThrow(() -> new ObjectNotFoundException("appearancerequest", requestId));
+
+    }
+
+    public List<AppearanceRequest> findByStatus(AppearanceRequestStatus status) {
+        return this.appearanceRequestRepository.findByStatus(status);
+    }
+
+    public List<AppearanceRequest> findByStatusAndStudent(AppearanceRequestStatus status, SuperFrogStudent student) {
+        return this.appearanceRequestRepository.findByStatusAndStudent(status, student);
     }
 }
