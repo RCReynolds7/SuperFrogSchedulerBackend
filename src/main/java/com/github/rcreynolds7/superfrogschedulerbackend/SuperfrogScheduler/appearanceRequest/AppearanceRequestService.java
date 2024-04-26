@@ -77,12 +77,6 @@ public class AppearanceRequestService {
         return appearanceRequestRepository.save(appearanceRequest);
     }
 
-    public void deleteAppearanceRequest(Integer requestId) {
-        this.appearanceRequestRepository.findById(requestId)
-                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
-        this.appearanceRequestRepository.deleteById(requestId);
-    }
-
     public List<AppearanceRequest> searchRequests(String id, String firstName, String lastName, String eventTitle) {
         Specification<AppearanceRequest> spec = Specification.where(null);
         if (StringUtils.hasText(firstName)) {
@@ -116,5 +110,17 @@ public class AppearanceRequestService {
 
     public List<AppearanceRequest> findByStatusAndStudent(AppearanceRequestStatus status, SuperFrogStudent student) {
         return this.appearanceRequestRepository.findByStatusAndStudent(status, student);
+    }
+
+    public void delete(Integer requestId) {
+        this.appearanceRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ObjectNotFoundException("AppearanceRequest", requestId));
+        this.appearanceRequestRepository.deleteById(requestId);
+    }
+
+    public void deleteAppearanceRequest(Integer requestId) {
+        this.appearanceRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
+        this.appearanceRequestRepository.deleteById(requestId);
     }
 }

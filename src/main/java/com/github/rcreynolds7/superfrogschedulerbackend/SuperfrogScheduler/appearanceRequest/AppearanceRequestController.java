@@ -163,7 +163,7 @@ public class AppearanceRequestController {
     }
 
     @PutMapping("/appearance-requests/{requestId}/status/{status}")
-    public Result updateAppearanceRequest(@PathVariable Integer requestId, @PathVariable AppearanceRequestStatus status) {
+    public Result updateAppearanceRequestStatus(@PathVariable Integer requestId, @PathVariable AppearanceRequestStatus status) {
         AppearanceRequest updatedRequest = this.appearanceRequestService.updateStatus(requestId, status);
         AppearanceRequestDto updatedRequestDto = this.appearanceRequestToAppearanceRequestDtoConverter.convert(updatedRequest);
         return new Result(true, StatusCode.SUCCESS, "Updated Status Success", updatedRequestDto);
