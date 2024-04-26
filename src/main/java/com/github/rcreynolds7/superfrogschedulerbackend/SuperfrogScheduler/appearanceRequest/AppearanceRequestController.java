@@ -4,21 +4,19 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appe
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.converter.AppearanceRequestDtoToAppearanceRequestConverter;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.converter.AppearanceRequestToAppearanceRequestDtoConverter;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.dto.AppearanceRequestDto;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import jakarta.validation.Valid;
-import jdk.jshell.Snippet;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("${api.endpoint.base-url}/appearance-requests")
 public class AppearanceRequestController {
 
     private final AppearanceRequestService appearanceRequestService;
@@ -34,15 +32,15 @@ public class AppearanceRequestController {
         this.appearanceRequestDtoToAppearanceRequestConverter = appearanceRequestDtoToAppearanceRequestConverter;
     }
 
-    @GetMapping("/appearance-requests/{requestId}")
+    @GetMapping("/{requestId}")
     public Result findAppearanceById(@PathVariable int requestId) {
         AppearanceRequest foundAppearanceRequest = this.appearanceRequestService.findById(requestId);
         AppearanceRequestDto appearanceRequestDto = this.appearanceRequestToAppearanceRequestDtoConverter.convert(foundAppearanceRequest);
         return new Result(true, StatusCode.SUCCESS, "Find One Success", appearanceRequestDto);
     }
 
-    @GetMapping("/appearance-requests")
-    public Result getAllAppearanceRequests(
+    @GetMapping("/")
+    public Result getAppearanceRequests(
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String eventTitle,
             @RequestParam(required = false) String firstName,
@@ -81,7 +79,7 @@ public class AppearanceRequestController {
         return new Result(true, StatusCode.SUCCESS, "Appearance request retrieved successfully", resultDtos);
     }
 
-    @GetMapping("/appearance-requests/status/{status}")
+    @GetMapping("/status/{status}")
     public Result findAppearanceByStatus(@PathVariable AppearanceRequestStatus status) {
         List<AppearanceRequest> foundAppearance = this.appearanceRequestService.findByStatus(status);
         List<AppearanceRequestDto> appearanceRequestDtos = foundAppearance.stream()
@@ -90,7 +88,7 @@ public class AppearanceRequestController {
         return new Result(true, StatusCode.SUCCESS, "Find Status Success", appearanceRequestDtos);
     }
 
-    @PostMapping("/appearance-requests")
+    @PostMapping("/")
     public Result addAppearanceRequest(@Valid @RequestBody AppearanceRequestDto appearanceRequestDto) {
         AppearanceRequest newAppearance = this.appearanceRequestDtoToAppearanceRequestConverter.convert(appearanceRequestDto);
         AppearanceRequest savedAppearance = this.appearanceRequestService.save(newAppearance);
@@ -98,7 +96,7 @@ public class AppearanceRequestController {
         return new Result(true, StatusCode.SUCCESS, "Add Successful", savedAppearanceDto);
     }
 
-    @PutMapping("/appearance-requests/{requestId}")
+    @PutMapping("/{requestId}")
     public Result updateAppearanceRequest(@PathVariable Integer appearanceRequestId, @RequestBody AppearanceRequest appearanceRequestUpdate) {
         AppearanceRequest appearanceRequest = appearanceRequestService.findById(appearanceRequestId);
 
@@ -162,14 +160,14 @@ public class AppearanceRequestController {
         return new Result(true, StatusCode.SUCCESS, "Appearance request information updated successfully", updatedAppearanceRequest);
     }
 
-    @PutMapping("/appearance-requests/{requestId}/status/{status}")
+    @PutMapping("/{requestId}/status/{status}")
     public Result updateAppearanceRequestStatus(@PathVariable Integer requestId, @PathVariable AppearanceRequestStatus status) {
         AppearanceRequest updatedRequest = this.appearanceRequestService.updateStatus(requestId, status);
         AppearanceRequestDto updatedRequestDto = this.appearanceRequestToAppearanceRequestDtoConverter.convert(updatedRequest);
         return new Result(true, StatusCode.SUCCESS, "Updated Status Success", updatedRequestDto);
     }
 
-    @DeleteMapping("/appearance-requests/{requestId}")
+    @DeleteMapping("/{requestId}")
     public Result deleteAppearanceRequest(@PathVariable Integer requestId) {
         this.appearanceRequestService.delete(requestId);
         return new Result(true, StatusCode.SUCCESS, "Delete Successful");

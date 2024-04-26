@@ -9,11 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -21,6 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.times;
@@ -40,7 +40,6 @@ public class AppearanceRequestServiceTest {
     void setUp() {
         AppearanceRequest a1 = new AppearanceRequest();
         a1.setId(1);
-        a1.setRequestId(1);
         a1.setFirstName("tom");
         a1.setLastName("lee");
         a1.setPhone("(123) 456-7901");
@@ -59,7 +58,6 @@ public class AppearanceRequestServiceTest {
 
         AppearanceRequest a2 = new AppearanceRequest();
         a2.setId(2);
-        a1.setRequestId(2);
         a2.setFirstName("Alice");
         a2.setLastName("Johnson");
         a2.setPhone("(987) 654-3210");
@@ -77,7 +75,6 @@ public class AppearanceRequestServiceTest {
 
         AppearanceRequest a3 = new AppearanceRequest();
         a3.setId(3);
-        a1.setRequestId(3);
         a3.setFirstName("Emily");
         a3.setLastName("Smith");
         a3.setPhone("(555) 123-4567");
@@ -95,7 +92,6 @@ public class AppearanceRequestServiceTest {
 
         AppearanceRequest a4 = new AppearanceRequest();
         a4.setId(4);
-        a1.setRequestId(4);
         a4.setFirstName("Michael");
         a4.setLastName("Johnson");
         a4.setPhone("(555) 555-5555");

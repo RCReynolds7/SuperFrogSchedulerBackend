@@ -17,10 +17,6 @@ public class AppearanceRequest {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer requestId;
-
     @NotEmpty(message = "firstname is required.")
     private String firstName;
 
@@ -94,14 +90,6 @@ public class AppearanceRequest {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(Integer requestId) {
-        this.requestId = requestId;
     }
 
     public String getFirstName() {

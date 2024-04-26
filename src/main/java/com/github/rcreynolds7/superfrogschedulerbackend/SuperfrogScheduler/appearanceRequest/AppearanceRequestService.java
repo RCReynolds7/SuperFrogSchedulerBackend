@@ -4,7 +4,6 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.super
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -105,11 +104,11 @@ public class AppearanceRequestService {
     }
 
     public List<AppearanceRequest> findByStatus(AppearanceRequestStatus status) {
-        return this.appearanceRequestRepository.findByStatus(status);
+        return this.appearanceRequestRepository.findByAppearanceRequestStatus(status);
     }
 
     public List<AppearanceRequest> findByStatusAndStudent(AppearanceRequestStatus status, SuperFrogStudent student) {
-        return this.appearanceRequestRepository.findByStatusAndStudent(status, student);
+        return this.appearanceRequestRepository.findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(student, List.of(status));
     }
 
     public void delete(Integer requestId) {
