@@ -160,17 +160,20 @@ public class AppearanceRequestController {
         return new Result(true, StatusCode.SUCCESS, "Appearance request information updated successfully", updatedAppearanceRequest);
     }
 
-    @PutMapping("/{requestId}/status/{status}")
-    public Result updateAppearanceRequestStatus(@PathVariable Integer requestId, @PathVariable AppearanceRequestStatus status) {
-        AppearanceRequest updatedRequest = this.appearanceRequestService.updateStatus(requestId, status);
-        AppearanceRequestDto updatedRequestDto = this.appearanceRequestToAppearanceRequestDtoConverter.convert(updatedRequest);
-        return new Result(true, StatusCode.SUCCESS, "Updated Status Success", updatedRequestDto);
+    @PutMapping("/{requestId}/status")
+    public Result updateAppearanceRequestStatus(@PathVariable Integer requestId, @RequestBody AppearanceRequestDto appearanceRequestDto) {
+        AppearanceRequest appearanceRequest = appearanceRequestService.findById(requestId);
+        appearanceRequest.setAppearanceRequestStatus(appearanceRequestDto.appearanceRequestStatus());
+        AppearanceRequest updatedRequest = this.appearanceRequestService.update(requestId, appearanceRequest);
+        return new Result(true, StatusCode.SUCCESS, "Updated Status Success", updatedRequest);
     }
 
-    @DeleteMapping("/{requestId}")
-    public Result deleteAppearanceRequest(@PathVariable Integer requestId) {
-        this.appearanceRequestService.delete(requestId);
-        return new Result(true, StatusCode.SUCCESS, "Delete Successful");
+    @PutMapping("/{requestId}/cancel")
+    public Result cancelAppearanceRequest(@PathVariable Integer requestId) {
+        AppearanceRequest appearanceRequest = appearanceRequestService.findById(requestId);
+        appearanceRequest.setAppearanceRequestStatus(AppearanceRequestStatus.CANCELED_BY_THE_SPIRIT_DIRECTOR);
+        AppearanceRequest updatedRequest = this.appearanceRequestService.update(requestId, appearanceRequest);
+        return new Result(true, StatusCode.SUCCESS, "Appearance Request Cancelled", updatedRequest);
     }
 
 

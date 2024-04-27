@@ -93,16 +93,6 @@ public class AppearanceRequestService {
         return appearanceRequestRepository.findAll(spec);
     }
 
-    public AppearanceRequest updateStatus(Integer requestId, AppearanceRequestStatus status) {
-        return this.appearanceRequestRepository.findById(requestId)
-                .map(oldRequest -> {
-                    oldRequest.setAppearanceRequestStatus(status);
-                    return this.appearanceRequestRepository.save(oldRequest);
-                })
-                .orElseThrow(() -> new ObjectNotFoundException("appearancerequest", requestId));
-
-    }
-
     public List<AppearanceRequest> findByStatus(AppearanceRequestStatus status) {
         return this.appearanceRequestRepository.findByAppearanceRequestStatus(status);
     }
