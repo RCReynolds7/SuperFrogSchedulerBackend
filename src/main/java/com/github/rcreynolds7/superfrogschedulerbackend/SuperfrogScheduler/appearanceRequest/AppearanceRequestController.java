@@ -97,8 +97,8 @@ public class AppearanceRequestController {
     }
 
     @PutMapping("/{requestId}")
-    public Result updateAppearanceRequest(@PathVariable Integer appearanceRequestId, @RequestBody AppearanceRequest appearanceRequestUpdate) {
-        AppearanceRequest appearanceRequest = appearanceRequestService.findById(appearanceRequestId);
+    public Result updateAppearanceRequest(@PathVariable Integer requestId, @RequestBody AppearanceRequest appearanceRequestUpdate) {
+        AppearanceRequest appearanceRequest = appearanceRequestService.findById(requestId);
 
         Optional.ofNullable(appearanceRequestUpdate.getFirstName())
                 .filter(name -> !name.isEmpty())
@@ -155,7 +155,7 @@ public class AppearanceRequestController {
                 .filter(detailedEventDescription -> !detailedEventDescription.isEmpty())
                 .ifPresent(appearanceRequest::setDetailedEventDescription);
 
-        AppearanceRequest updatedAppearanceRequest = appearanceRequestService.update(appearanceRequestId, appearanceRequest);
+        AppearanceRequest updatedAppearanceRequest = appearanceRequestService.update(requestId, appearanceRequest);
 
         return new Result(true, StatusCode.SUCCESS, "Appearance request information updated successfully", updatedAppearanceRequest);
     }
