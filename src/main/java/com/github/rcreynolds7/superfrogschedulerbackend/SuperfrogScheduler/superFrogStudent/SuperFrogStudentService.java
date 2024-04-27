@@ -116,13 +116,14 @@ public class SuperFrogStudentService {
 
         return performanceReport;
     }
+    /*
     @Transactional
     public SuperFrogStudent createSuperFrogStudent(SuperFrogStudentDto studentDto) {
         validateEmailUniqueness(studentDto.email());
-        SuperFrogStudent student = mapDtoToEntity(studentDto);
+        SuperFrogStudent student = save(studentDto);
         superFrogStudentRepository.save(student);
         return student;
-    }
+    }*/
 
         private void validateEmailUniqueness(String email) {
             Optional<SuperFrogStudent> existingStudent = superFrogStudentRepository.findByEmail(email);
@@ -130,24 +131,45 @@ public class SuperFrogStudentService {
                 throw new IllegalStateException("Email already in use.");
             }
         }
-
-        private SuperFrogStudent mapDtoToEntity(SuperFrogStudentDto studentDto) {
-            SuperFrogStudent student = new SuperFrogStudent();
-            student.setFirstName(student.getFirstName());
-            student.setLastName(student.getLastName());
-            student.setEmail(student.getEmail());
-            student.setPhone(student.getPhone());
-            student.setAddress(student.getAddress());
-            student.setActive(student.getActive());
-            student.setInternational(student.getInternational());
-            student.setPaymentPreference(student.getPaymentPreference());
-            return student;
+        public SuperFrogStudent save(SuperFrogStudent newStudent) {
+        newStudent.setId(newStudent.getId());
+        newStudent.setAddress(newStudent.getAddress());
+        newStudent.setFirstName(newStudent.getFirstName());
+        newStudent.setLastName(newStudent.getLastName());
+        newStudent.setPhone(newStudent.getPhone());
+        newStudent.setAddress(newStudent.getAddress());
+        return this.superFrogStudentRepository.save(newStudent);
         }
+/*
+    private SuperFrogStudent save(SuperFrogStudentDto studentDto) {
+        SuperFrogStudent student = new SuperFrogStudent();
+        student.setFirstName(studentDto.firstName()); // Directly access the public field from studentDto
+        student.setLastName(studentDto.lastName());
+        student.setEmail(studentDto.email());
+        student.setPhone(studentDto.phone());
+        student.setAddress(studentDto.address());
+        return student;
+    }
+    */
 
-        private String generateTemporaryPassword() {
+
+    /*
+    public SuperFrogStudent save(SuperFrogStudent newArtifact){
+        newArtifact.setId(newArtifact.getId());
+        newArtifact.setFirstName(newArtifact.getFirstName());
+        newArtifact.setLastName(newArtifact.getLastName());
+        newArtifact.setPhone(newArtifact.getPhone());
+        newArtifact.setEmail(newArtifact.getEmail());
+        newArtifact.setAddress(newArtifact.getAddress());
+        newArtifact.setInternational(newArtifact.getInternational());
+        newArtifact.setPaymentPreference(newArtifact.getPaymentPreference());
+        return this.superFrogStudentRepository.save(newArtifact);
+    }
+*/
+
+    private String generateTemporaryPassword() {
             return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);  // Generate a simple 8-character password
         }
-
 
 
 }

@@ -1,11 +1,12 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.converter.SuperFrogStudentDtoToSuperFrogStudentConverter;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.converter.SuperFrogStudentToSuperFrogStudentDtoConverter;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -14,9 +15,14 @@ import java.util.Optional;
 @RequestMapping("${api.endpoint.base-url}/superfrog-students")
 public class SuperFrogStudentController {
     private final SuperFrogStudentService superFrogStudentService;
+    private final SuperFrogStudentToSuperFrogStudentDtoConverter superFrogStudentToSuperFrogStudentDtoConverter;
+    private final SuperFrogStudentDtoToSuperFrogStudentConverter superFrogStudentDtoToSuperFrogStudentConverter;
 
-    public SuperFrogStudentController(SuperFrogStudentService superFrogStudentService) {
+
+    public SuperFrogStudentController(SuperFrogStudentService superFrogStudentService, SuperFrogStudentDtoToSuperFrogStudentConverter superFrogStudentDtoToSuperFrogStudentConverter, SuperFrogStudentToSuperFrogStudentDtoConverter superFrogStudentToSuperFrogStudentDtoConverter) {
         this.superFrogStudentService = superFrogStudentService;
+        this.superFrogStudentToSuperFrogStudentDtoConverter = superFrogStudentToSuperFrogStudentDtoConverter;
+        this.superFrogStudentDtoToSuperFrogStudentConverter = superFrogStudentDtoToSuperFrogStudentConverter;
     }
 
     @PutMapping("/{superFrogStudentId}")
@@ -58,7 +64,8 @@ public class SuperFrogStudentController {
 
         return new Result(true, StatusCode.SUCCESS, "SuperFrog Student information updated successfully");
     }
-    @PostMapping("/{superfrog-students}")
+    /*
+    @PostMapping("/superFrog-students")
     public ResponseEntity<?> createSuperFrogStudent(@RequestBody SuperFrogStudentDto studentDto) {
         try {
             SuperFrogStudent createdStudent = superFrogStudentService.createSuperFrogStudent(studentDto);
@@ -69,5 +76,14 @@ public class SuperFrogStudentController {
             return ResponseEntity.internalServerError().body("An unexpected error occurred: " + e.getMessage());
         }
     }
+*/
+    @PostMapping("/") //Need to ask for full url
+    public Result createSuperFrogStudent(@Valid @RequestBody SuperFrogStudentDto studentDto){
+        SuperFrogStudent newStudent = this.superFrogStudentDtoToSuperFrogStudentConverter.convert(studentDto);
+        SuperFrogStudent savedStudent = this.superFrogStudentService.save(newStudent);
+        SuperFrogStudentDto savedStudentDto = this.superFrogStudentToSuperFrogStudentDtoConverter.convert(savedStudent);
+        return new Result(true, StatusCode.SUCCESS, "Add Success", savedStudentDto);
+    }
+
 
 }
