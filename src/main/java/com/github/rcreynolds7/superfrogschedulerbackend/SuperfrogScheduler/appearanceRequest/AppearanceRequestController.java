@@ -4,6 +4,7 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appe
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.converter.AppearanceRequestDtoToAppearanceRequestConverter;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.converter.AppearanceRequestToAppearanceRequestDtoConverter;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.dto.AppearanceRequestDto;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.dto.AppearanceRequestStatusDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.Result;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
@@ -161,9 +162,9 @@ public class AppearanceRequestController {
     }
 
     @PutMapping("/{requestId}/status")
-    public Result updateAppearanceRequestStatus(@PathVariable Integer requestId, @RequestBody AppearanceRequestDto appearanceRequestDto) {
+    public Result updateAppearanceRequestStatus(@PathVariable Integer requestId, @RequestBody AppearanceRequestStatusDto appearanceRequestStatusDto) {
         AppearanceRequest appearanceRequest = appearanceRequestService.findById(requestId);
-        appearanceRequest.setAppearanceRequestStatus(appearanceRequestDto.appearanceRequestStatus());
+        appearanceRequest.setAppearanceRequestStatus(appearanceRequestStatusDto.appearanceRequestStatus());
         AppearanceRequest updatedRequest = this.appearanceRequestService.update(requestId, appearanceRequest);
         return new Result(true, StatusCode.SUCCESS, "Updated Status Success", updatedRequest);
     }
