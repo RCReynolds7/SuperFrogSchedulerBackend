@@ -4,7 +4,6 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.super
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,7 +16,9 @@ import java.util.List;
 public class AppearanceRequestService {
     private final AppearanceRequestRepository appearanceRequestRepository;
 
-    public AppearanceRequest createAppearanceRequest(AppearanceRequest request) { return this.appearanceRequestRepository.save(request);}
+    public AppearanceRequest createAppearanceRequest(AppearanceRequest request) {
+        return this.appearanceRequestRepository.save(request);
+    }
 
     public AppearanceRequestService(AppearanceRequestRepository appearanceRequestRepository) {
         this.appearanceRequestRepository = appearanceRequestRepository;
@@ -74,10 +75,6 @@ public class AppearanceRequestService {
                 .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
         return appearanceRequestRepository.save(appearanceRequest);
     }
-    public void deleteAppearanceRequest(Integer requestId) {
-        this.appearanceRequestRepository.findById(requestId)
-                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
-    }
 
     public List<AppearanceRequest> searchRequests(String id, String firstName, String lastName, String eventTitle) {
         Specification<AppearanceRequest> spec = Specification.where(null);
@@ -94,5 +91,25 @@ public class AppearanceRequestService {
             spec = spec.and(AppearanceRequestSpecifications.withId(id));
         }
         return appearanceRequestRepository.findAll(spec);
+    }
+
+    public List<AppearanceRequest> findByStatus(AppearanceRequestStatus status) {
+        return this.appearanceRequestRepository.findByAppearanceRequestStatus(status);
+    }
+
+    public List<AppearanceRequest> findByStatusAndStudent(AppearanceRequestStatus status, SuperFrogStudent student) {
+        return this.appearanceRequestRepository.findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(student, List.of(status));
+    }
+
+    public void delete(Integer requestId) {
+        this.appearanceRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ObjectNotFoundException("AppearanceRequest", requestId));
+        this.appearanceRequestRepository.deleteById(requestId);
+    }
+
+    public void deleteAppearanceRequest(Integer requestId) {
+        this.appearanceRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
+        this.appearanceRequestRepository.deleteById(requestId);
     }
 }

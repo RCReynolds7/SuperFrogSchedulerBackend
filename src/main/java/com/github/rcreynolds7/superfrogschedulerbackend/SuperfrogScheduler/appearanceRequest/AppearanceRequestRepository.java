@@ -12,6 +12,9 @@ import java.util.List;
 
 @Repository
 public interface AppearanceRequestRepository extends JpaRepository<AppearanceRequest, Integer>, JpaSpecificationExecutor<AppearanceRequest> {
+
+    List<AppearanceRequest> findByAppearanceRequestStatus(AppearanceRequestStatus status);
+
     List<AppearanceRequest> findByAssignedSuperFrogStudentAndAppearanceRequestStatusIn(SuperFrogStudent student, List<AppearanceRequestStatus> statuses);
     List<AppearanceRequest> findByAssignedSuperFrogStudentAndAppearanceRequestStatusInAndDateBetween(
             SuperFrogStudent student,
