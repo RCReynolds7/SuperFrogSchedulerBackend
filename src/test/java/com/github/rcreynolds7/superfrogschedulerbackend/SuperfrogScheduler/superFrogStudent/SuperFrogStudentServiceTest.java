@@ -4,6 +4,8 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appea
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestRepository;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReport;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.utils.IdWorker;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.PaymentPreference;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
@@ -15,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles(value = "dev")
 public class SuperFrogStudentServiceTest {
     @Mock
     SuperFrogStudentRepository superFrogStudentRepository;
@@ -41,6 +45,9 @@ public class SuperFrogStudentServiceTest {
 
     @Mock
     AppearanceRequestService appearanceRequestService;
+
+    @Mock
+    IdWorker idWorker;
 
     @InjectMocks
     SuperFrogStudentService superFrogStudentService;
@@ -359,5 +366,31 @@ public class SuperFrogStudentServiceTest {
         assertThat(report.getEndDate()).isEqualTo(endDate);
         assertThat(report.getCompletedAppearances()).isEqualTo(0);
         assertThat(report.getCancelledAppearances()).isEqualTo(0);
+    }
+
+    @Test
+    void testSaveSuccess() {
+        // Given
+        SuperFrogStudent newStudent = new SuperFrogStudent();
+        newStudent.setId(1);
+        newStudent.setAddress("2901 Stadium Drive");
+        newStudent.setFirstName("tom");
+        newStudent.setLastName("lee");
+        newStudent.setPhone("(609) 206-5044");
+        newStudent.setActive(true);
+
+        given(this.idWorker.nextId()).willReturn(123456L);
+        given(this.superFrogStudentRepository.save(newStudent)).willReturn(newStudent);
+
+        // When
+        SuperFrogStudent savedArtifact = this.superFrogStudentService.save(newStudent);
+
+        // Then
+        assertThat(savedArtifact.getId()).isEqualTo(123456);
+        assertThat(savedArtifact.getFirstName()).isEqualTo(newStudent.getFirstName());
+        assertThat(savedArtifact.getLastName()).isEqualTo(newStudent.getLastName());
+        assertThat(savedArtifact.getPhone()).isEqualTo(newStudent.getPhone());
+        assertThat(savedArtifact.getActive()).isEqualTo(newStudent.getActive());
+        verify(this.superFrogStudentRepository, times(1)).save(newStudent);
     }
 }

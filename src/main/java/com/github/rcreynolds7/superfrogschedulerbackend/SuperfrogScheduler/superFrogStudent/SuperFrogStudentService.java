@@ -137,7 +137,7 @@ public class SuperFrogStudentService {
         newStudent.setFirstName(newStudent.getFirstName());
         newStudent.setLastName(newStudent.getLastName());
         newStudent.setPhone(newStudent.getPhone());
-        newStudent.setAddress(newStudent.getAddress());
+        newStudent.setActive(newStudent.getActive());
         return this.superFrogStudentRepository.save(newStudent);
         }
 /*
