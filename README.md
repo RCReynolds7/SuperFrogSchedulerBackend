@@ -10,6 +10,9 @@ Web Tech Project
 ## Docker Image
 - https://hub.docker.com/repository/docker/timep12345/superfrogschedulerbackend/
 
+## Live Frontend (deployed on vercel)
+- https://super-frog-scheduler-frontend-sigma.vercel.app/
+
 ## Live Backend (deployed on render.com)
 - https://superfrogschedulerbackend-latest.onrender.com
 
