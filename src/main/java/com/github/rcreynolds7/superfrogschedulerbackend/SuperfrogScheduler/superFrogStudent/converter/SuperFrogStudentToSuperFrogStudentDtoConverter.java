@@ -2,17 +2,17 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.supe
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
+import org.springframework.stereotype.Component;
+import org.springframework.core.convert.converter.Converter;
 
 @Component
-public class SuperFrogStudentToSuperFrogStudentDtoConverter  implements Converter<SuperFrogStudent, SuperFrogStudentDto> {
+public class SuperFrogStudentToSuperFrogStudentDtoConverter implements Converter<SuperFrogStudent, SuperFrogStudentDto> {
 
     @Override
     public SuperFrogStudentDto convert(SuperFrogStudent source) {
-        SuperFrogStudentDto superFrogStudentDto = new SuperFrogStudentDto(
-                source.getId(),
+        SuperFrogStudentDto superFrogStudentDto = new SuperFrogStudentDto(source.getId(),
+
                 source.getFirstName(),
                 source.getLastName(),
                 source.getEmail(),

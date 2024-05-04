@@ -37,6 +37,9 @@ public class SuperFrogStudent {
     @Enumerated(EnumType.STRING) // This stores the Enum as a String in the database
     private PaymentPreference paymentPreference = PaymentPreference.MAIL_CHECK;
 
+    @Transient
+    private String temporaryPassword; // Not stored in the database, used only during the creation process
+
     // Constructor
     public SuperFrogStudent() {
     }
@@ -114,5 +117,13 @@ public class SuperFrogStudent {
 
     public void setPaymentPreference(PaymentPreference paymentPreference) {
         this.paymentPreference = paymentPreference;
+    }
+
+    public String getTemporaryPassword() {
+        return temporaryPassword;
+    }
+
+    public void setTemporaryPassword(String temporaryPassword) {
+        this.temporaryPassword = temporaryPassword;
     }
 }

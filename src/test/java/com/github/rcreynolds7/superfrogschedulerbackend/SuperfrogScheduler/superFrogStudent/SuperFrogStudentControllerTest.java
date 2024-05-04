@@ -1,16 +1,20 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.StatusCode;
 import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -20,13 +24,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false) //This is used to turn off spring security
+@ActiveProfiles(value = "dev")
 public class SuperFrogStudentControllerTest {
     @Autowired
     MockMvc mockMvc;
@@ -89,6 +93,37 @@ public class SuperFrogStudentControllerTest {
 
     @AfterEach()
     void tearDown() {
+    }
+
+    @Test
+    void testCreateSuperFrogStudentSuccess() throws Exception {
+        // Given
+        SuperFrogStudentDto superFrogStudentDto = new SuperFrogStudentDto(1, "tom", "lee", "tomlee@tcu.edu", "(123) 456-7901", "2901 Stadium Dr. Fort Worth, TX 76109", true);
+        String json = this.objectMapper.writeValueAsString(superFrogStudentDto);
+
+        SuperFrogStudent savedStudent = new SuperFrogStudent();
+        savedStudent.setId(1);
+        savedStudent.setFirstName("tom");
+        savedStudent.setLastName("lee");
+        savedStudent.setEmail("tomlee@tcu.edu");
+        savedStudent.setPhone("(123) 456-7901");
+        savedStudent.setAddress("2901 Stadium Dr. Fort Worth, TX 76109");
+        savedStudent.setActive(true);
+
+        given(this.superFrogStudentService.save(Mockito.any(SuperFrogStudent.class))).willReturn(savedStudent);
+
+        // When and then
+        this.mockMvc.perform(post(this.baseUrl + "/").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Add Success"))
+                .andExpect(jsonPath("$.data.id").value(savedStudent.getId()))  //isNotEmpty())
+                .andExpect(jsonPath("$.data.firstName").value(savedStudent.getFirstName()))
+                .andExpect(jsonPath("$.data.lastName").value(savedStudent.getLastName()))
+                .andExpect(jsonPath("$.data.isActive").value((true)))
+                .andExpect(jsonPath("$.data.phone").value(savedStudent.getPhone()))
+                .andExpect(jsonPath("$.data.email").value(savedStudent.getEmail()));
+
     }
 
 }

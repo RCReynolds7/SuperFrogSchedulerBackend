@@ -4,13 +4,17 @@ import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appea
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestRepository;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.performanceReport.PerformanceReport;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import java.util.Optional;
+import java.util.UUID;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -112,4 +116,60 @@ public class SuperFrogStudentService {
 
         return performanceReport;
     }
+    /*
+    @Transactional
+    public SuperFrogStudent createSuperFrogStudent(SuperFrogStudentDto studentDto) {
+        validateEmailUniqueness(studentDto.email());
+        SuperFrogStudent student = save(studentDto);
+        superFrogStudentRepository.save(student);
+        return student;
+    }*/
+
+        private void validateEmailUniqueness(String email) {
+            Optional<SuperFrogStudent> existingStudent = superFrogStudentRepository.findByEmail(email);
+            if (existingStudent.isPresent()) {
+                throw new IllegalStateException("Email already in use.");
+            }
+        }
+        public SuperFrogStudent save(SuperFrogStudent newStudent) {
+        newStudent.setId(newStudent.getId());
+        newStudent.setAddress(newStudent.getAddress());
+        newStudent.setFirstName(newStudent.getFirstName());
+        newStudent.setLastName(newStudent.getLastName());
+        newStudent.setPhone(newStudent.getPhone());
+        newStudent.setActive(newStudent.getActive());
+        return this.superFrogStudentRepository.save(newStudent);
+        }
+/*
+    private SuperFrogStudent save(SuperFrogStudentDto studentDto) {
+        SuperFrogStudent student = new SuperFrogStudent();
+        student.setFirstName(studentDto.firstName()); // Directly access the public field from studentDto
+        student.setLastName(studentDto.lastName());
+        student.setEmail(studentDto.email());
+        student.setPhone(studentDto.phone());
+        student.setAddress(studentDto.address());
+        return student;
+    }
+    */
+
+
+    /*
+    public SuperFrogStudent save(SuperFrogStudent newArtifact){
+        newArtifact.setId(newArtifact.getId());
+        newArtifact.setFirstName(newArtifact.getFirstName());
+        newArtifact.setLastName(newArtifact.getLastName());
+        newArtifact.setPhone(newArtifact.getPhone());
+        newArtifact.setEmail(newArtifact.getEmail());
+        newArtifact.setAddress(newArtifact.getAddress());
+        newArtifact.setInternational(newArtifact.getInternational());
+        newArtifact.setPaymentPreference(newArtifact.getPaymentPreference());
+        return this.superFrogStudentRepository.save(newArtifact);
+    }
+*/
+
+    private String generateTemporaryPassword() {
+            return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);  // Generate a simple 8-character password
+        }
+
+
 }
