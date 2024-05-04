@@ -372,7 +372,7 @@ public class SuperFrogStudentServiceTest {
     void testSaveSuccess() {
         // Given
         SuperFrogStudent newStudent = new SuperFrogStudent();
-        newStudent.setId(1);
+        newStudent.setId(123456);
         newStudent.setAddress("2901 Stadium Drive");
         newStudent.setFirstName("tom");
         newStudent.setLastName("lee");
