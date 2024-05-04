@@ -1,4 +1,4 @@
-package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.actuator;
+/*package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.actuator;
 
 import org.springframework.boot.actuate.web.exchanges.HttpExchangeRepository;
 import org.springframework.boot.actuate.web.exchanges.InMemoryHttpExchangeRepository;
@@ -15,4 +15,4 @@ public class ActuatorConfiguration {
         return repository;
     }
 
-}
+}*/

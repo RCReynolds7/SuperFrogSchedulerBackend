@@ -1,4 +1,4 @@
-package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.actuator;
+/*package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.actuator;
 
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
@@ -21,3 +21,4 @@ public class CustomBeansEndpoint {
     }
 
 }
+*/
