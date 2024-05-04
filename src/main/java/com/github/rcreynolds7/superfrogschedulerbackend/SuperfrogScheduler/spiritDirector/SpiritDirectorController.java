@@ -2,6 +2,7 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.spir
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequest;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.AppearanceRequestService;
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.dto.AppearanceRequestDto;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.Event;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.event.EventService;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.honorarium.dto.HonorariumRequestDto;
@@ -134,7 +135,7 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "Event deleted successfully");
     }
 
-    @GetMapping("/create-honorarium/{superFrogStudentId}")
+    @PostMapping ("/create-honorarium/{superFrogStudentId}")
     public Result createHonorarium(@PathVariable Integer superFrogStudentId, @RequestBody HonorariumRequestDto honorariumRequest) {
         LocalDateTime startDate = honorariumRequest.startDate();
         LocalDateTime endDate = honorariumRequest.endDate();
@@ -163,9 +164,10 @@ public class SpiritDirectorController {
         return new Result(true, StatusCode.SUCCESS, "Honorarium requests created and submitted to payroll successfully.", responseDto);
     }
 
-    @GetMapping("/create-performance-report/{superFrogStudentId}")
+    @PostMapping("/create-performance-report/{superFrogStudentId}")
     public Result createPerformanceReport(@PathVariable Integer superFrogStudentId, @RequestBody PerformanceReportRequest request) {
         PerformanceReport report = superFrogStudentService.generatePerformanceReport(superFrogStudentId, request.getStartDate(), request.getEndDate());
         return new Result(true, StatusCode.SUCCESS, "Performance report generated successfully.", report);
     }
+
 }
