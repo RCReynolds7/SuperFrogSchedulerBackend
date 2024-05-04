@@ -379,7 +379,7 @@ public class SuperFrogStudentServiceTest {
         newStudent.setPhone("(609) 206-5044");
         newStudent.setActive(true);
 
-        given(this.idWorker.nextId()).willReturn(123456L);
+        //given(this.idWorker.nextId()).willReturn(123456L);
         given(this.superFrogStudentRepository.save(newStudent)).willReturn(newStudent);
 
         // When
