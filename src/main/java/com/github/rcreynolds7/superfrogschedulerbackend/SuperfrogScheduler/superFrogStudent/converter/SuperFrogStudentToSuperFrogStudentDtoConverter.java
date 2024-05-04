@@ -2,6 +2,7 @@ package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.supe
 
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.SuperFrogStudent;
 import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.superFrogStudent.dto.SuperFrogStudentDto;
+
 import org.springframework.stereotype.Component;
 import org.springframework.core.convert.converter.Converter;
 
@@ -11,12 +12,14 @@ public class SuperFrogStudentToSuperFrogStudentDtoConverter implements Converter
     @Override
     public SuperFrogStudentDto convert(SuperFrogStudent source) {
         SuperFrogStudentDto superFrogStudentDto = new SuperFrogStudentDto(source.getId(),
+
                 source.getFirstName(),
                 source.getLastName(),
                 source.getEmail(),
                 source.getPhone(),
                 source.getAddress(),
                 source.getActive());
+
         return superFrogStudentDto;
     }
 }

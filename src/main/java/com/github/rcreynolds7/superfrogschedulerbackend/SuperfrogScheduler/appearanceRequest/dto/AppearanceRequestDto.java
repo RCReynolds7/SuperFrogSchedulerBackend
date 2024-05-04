@@ -1,6 +1,9 @@
 package com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.appearanceRequest.dto;
 
+import com.github.rcreynolds7.superfrogschedulerbackend.SuperfrogScheduler.system.enums.AppearanceRequestStatus;
 import jakarta.validation.constraints.NotEmpty;
+
+import java.time.LocalDateTime;
 
 public record AppearanceRequestDto (int requestId,
                                     @NotEmpty(message = "firstname is required.")  String firstName,
@@ -14,6 +17,13 @@ public record AppearanceRequestDto (int requestId,
                                     @NotEmpty(message = "special instructions are required.") String specialInstructions,
                                     @NotEmpty(message = "expenses or benefits are required.") String expensesOrBenefits,
                                     @NotEmpty(message = "other organizations involved are required.") String otherOrganizationsInvolved,
-                                    @NotEmpty(message = "detailed event descripiton required.") String detailedEventDescription
-) {
+                                    @NotEmpty(message = "detailed event descripiton required.") String detailedEventDescription,
+                                    String instructions, @NotEmpty(message = "appearenceRequestStatus required.") AppearanceRequestStatus appearanceRequestStatus,
+                                    @NotEmpty(message = "Date required") LocalDateTime date
+
+
+
+
+
+                                    ) {
 }
