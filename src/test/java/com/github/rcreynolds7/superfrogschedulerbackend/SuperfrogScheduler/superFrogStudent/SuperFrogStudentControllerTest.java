@@ -98,13 +98,13 @@ public class SuperFrogStudentControllerTest {
     @Test
     void testCreateSuperFrogStudentSuccess() throws Exception {
         // Given
-        SuperFrogStudentDto superFrogStudentDto = new SuperFrogStudentDto(null, "tom", "lee", "tomlee@tcu.edu", "(123) 456-7901", "2901 Stadium Dr. Fort Worth, TX 76109", true);
+        SuperFrogStudentDto superFrogStudentDto = new SuperFrogStudentDto(1, "tom", "lee", "tomlee@tcu.edu", "(123) 456-7901", "2901 Stadium Dr. Fort Worth, TX 76109", true);
         String json = this.objectMapper.writeValueAsString(superFrogStudentDto);
 
         SuperFrogStudent savedStudent = new SuperFrogStudent();
         savedStudent.setId(1);
         savedStudent.setFirstName("tom");
-        savedStudent.setFirstName("lee");
+        savedStudent.setLastName("lee");
         savedStudent.setEmail("tomlee@tcu.edu");
         savedStudent.setPhone("(123) 456-7901");
         savedStudent.setAddress("2901 Stadium Dr. Fort Worth, TX 76109");
@@ -117,11 +117,12 @@ public class SuperFrogStudentControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
-                .andExpect(jsonPath("$.data.name").value(savedStudent.getFirstName()))
-                .andExpect(jsonPath("$.data.email").value(savedStudent.getEmail()))
+                .andExpect(jsonPath("$.data.id").value(savedStudent.getId()))  //isNotEmpty())
+                .andExpect(jsonPath("$.data.firstName").value(savedStudent.getFirstName()))
+                .andExpect(jsonPath("$.data.lastName").value(savedStudent.getLastName()))
+                .andExpect(jsonPath("$.data.isActive").value((true)))
                 .andExpect(jsonPath("$.data.phone").value(savedStudent.getPhone()))
-                .andExpect(jsonPath("$.data.isActive").value((true)));
+                .andExpect(jsonPath("$.data.email").value(savedStudent.getEmail()));
 
     }
 

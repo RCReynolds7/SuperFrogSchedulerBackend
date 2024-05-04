@@ -47,6 +47,11 @@
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-actuator</artifactId>
+            <version>3.2.0</version>
+        </dependency>
     </dependencies>
 
 	<build>

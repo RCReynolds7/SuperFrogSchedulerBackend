@@ -8,11 +8,6 @@ import org.springframework.core.convert.converter.Converter;
 @Component
 public class SuperFrogStudentToSuperFrogStudentDtoConverter implements Converter<SuperFrogStudent, SuperFrogStudentDto> {
 
-    public final SuperFrogStudentToSuperFrogStudentDtoConverter superFrogStudentToSuperFrogStudentDtoConverter;
-    public SuperFrogStudentToSuperFrogStudentDtoConverter(SuperFrogStudentToSuperFrogStudentDtoConverter superFrogStudentToSuperFrogStudentDtoConverter) {
-        this.superFrogStudentToSuperFrogStudentDtoConverter = superFrogStudentToSuperFrogStudentDtoConverter;
-    }
-
     @Override
     public SuperFrogStudentDto convert(SuperFrogStudent source) {
         SuperFrogStudentDto superFrogStudentDto = new SuperFrogStudentDto(source.getId(),

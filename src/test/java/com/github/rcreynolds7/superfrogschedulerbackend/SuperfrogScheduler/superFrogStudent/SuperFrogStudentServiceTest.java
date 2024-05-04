@@ -383,14 +383,14 @@ public class SuperFrogStudentServiceTest {
         given(this.superFrogStudentRepository.save(newStudent)).willReturn(newStudent);
 
         // When
-        SuperFrogStudent savedArtifact = this.superFrogStudentService.save(newStudent);
+        SuperFrogStudent savedStudent = this.superFrogStudentService.save(newStudent);
 
         // Then
-        assertThat(savedArtifact.getId()).isEqualTo(123456);
-        assertThat(savedArtifact.getFirstName()).isEqualTo(newStudent.getFirstName());
-        assertThat(savedArtifact.getLastName()).isEqualTo(newStudent.getLastName());
-        assertThat(savedArtifact.getPhone()).isEqualTo(newStudent.getPhone());
-        assertThat(savedArtifact.getActive()).isEqualTo(newStudent.getActive());
+        assertThat(savedStudent.getId()).isEqualTo(123456);
+        assertThat(savedStudent.getFirstName()).isEqualTo(newStudent.getFirstName());
+        assertThat(savedStudent.getLastName()).isEqualTo(newStudent.getLastName());
+        assertThat(savedStudent.getPhone()).isEqualTo(newStudent.getPhone());
+        assertThat(savedStudent.getActive()).isEqualTo(newStudent.getActive());
         verify(this.superFrogStudentRepository, times(1)).save(newStudent);
     }
 }
