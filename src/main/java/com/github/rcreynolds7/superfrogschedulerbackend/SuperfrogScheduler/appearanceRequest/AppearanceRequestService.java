@@ -143,4 +143,24 @@ public class AppearanceRequestService {
                 .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
         this.appearanceRequestRepository.deleteById(requestId);
     }
+    /*
+    // //This is UC 9. Needs UC-7 to be implemented
+
+    public void assignSuperFrogStudent(Integer requestId, String superFrogStudentId){
+        // Find this artifact by Id from DB.
+        SuperFrogStudent superFogStudentToBeAssigned = this.superFrogStudentRepository.findById(superFrogStudentId)
+                .orElseThrow(() -> new ObjectNotFoundException("superFrogStudent", superFrogStudentId));
+
+        // Find this wizard by Id from DB.
+        AppearanceRequest appearanceRequest = this.AppearanceRepository.findById(requestId)
+                .orElseThrow(() -> new ObjectNotFoundException("appearance", requestId));
+
+        // SuperFrogStudent assignment
+        // We need to see if the student is already assigned to an appearance.
+        if (superFrogStudentToBeAssigned.getOwner() != null) {
+            superFrogStudentToBeAssigned.getOwner().removeSuperFrogStudent(superFrogStudentToBeAssigned);
+        }
+        appearance.addSuperFrogStudent(superFrogStudentToBeAssigned);
+    }
+    */
 }
