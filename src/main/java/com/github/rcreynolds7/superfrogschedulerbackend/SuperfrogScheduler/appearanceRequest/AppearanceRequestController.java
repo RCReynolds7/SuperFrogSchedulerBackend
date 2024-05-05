@@ -246,6 +246,16 @@ public class AppearanceRequestController {
         return new Result(true, StatusCode.SUCCESS, "Appearance Request Cancelled", updatedRequest);
     }
 
+    /*
+    //This is UC 9. Needs UC-7 to be implemented
+
+    @PutMapping("/{requestId}")
+    public Result assignSuperFrogStudent(@PathVariable requestInteger requestId, @PathVariable String superFrogsStudentId) {
+        this.AppearanceRequestService.assignSuperFrogStudent(requestId, superFrogStudentId);
+        return new Result(true, StatusCode.SUCCESS, "SuperFrogStudent Appearance Assignment Success");
+    }
+     */
+
 
 
 }
