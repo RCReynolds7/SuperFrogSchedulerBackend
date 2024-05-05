@@ -75,6 +75,37 @@ public class AppearanceRequestService {
                 .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
         return appearanceRequestRepository.save(appearanceRequest);
     }
+    /*
+    //This is the service implementation of UC8. It is commented out because it relies on using UC7(Ability to view an appearance request)
+
+    public AppearanceRequest viewAppearanceRequest(Integer requestId) {
+    return appearanceRequestRepository.findById(requestId)
+            .orElseThrow(() -> new ObjectNotFoundException("AppearanceRequest", requestId));
+    }
+
+    public AppearanceRequest update(Integer requestId, AppearanceRequest update) {
+        AppearanceRequest appearanceRequest = this.appearanceRequestRepository
+            .findById(requestId)
+            .orElseThrow(() -> new ObjectNotFoundException("appearanceRequest", requestId));
+
+    appearanceRequest.setFirstName(update.getFirstName());
+    appearanceRequest.setLastName(update.getLastName());
+    appearanceRequest.setEmail(update.getEmail());
+    appearanceRequest.setPhone(update.getPhone());
+    appearanceRequest.setDate(update.getDate());
+    appearanceRequest.setTypeOfEvent(update.getTypeOfEvent());
+    appearanceRequest.setEventTitle(update.getEventTitle());
+    appearanceRequest.setNameOfOrg(update.getNameOfOrg());
+    appearanceRequest.setEventAddress(update.getEventAddress());
+    appearanceRequest.setIsOnCampus(update.getIsOnCampus());
+    appearanceRequest.setSpecialInstructions(update.getSpecialInstructions());
+    appearanceRequest.setExpensesOrBenefits(update.getExpensesOrBenefits());
+    appearanceRequest.setOtherOrganizationsInvolved(update.getOtherOrganizationsInvolved());
+    appearanceRequest.setDetailedEventDescription(update.getDetailedEventDescription());
+
+    return appearanceRequestRepository.save(appearanceRequest);
+}
+     */
 
     public List<AppearanceRequest> searchRequests(String id, String firstName, String lastName, String eventTitle) {
         Specification<AppearanceRequest> spec = Specification.where(null);
